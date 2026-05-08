@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Practiced Stillness — Archive UI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* High-Tech Imperial/Rebel UI Palette */
+      --bg: #06080c;
+      --panel: #0d1218;
+      --panel-2: #111923;
+      --line: #1b2632;
+      --text: #cfd8e3;
+      --muted: #7d8c9b;
+      --dim: #4b5a68;
+      --cyan: #63d3ff;
+      --cyan-deep: #0288D1;
+      --cyan-soft: rgba(99, 211, 255, 0.05);
+      --amber: #ffb300;
+      
+      --ui: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      
+      --max: 1100px;
+      --gutter: clamp(1.5rem, 5vw, 4rem);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: var(--ui); 
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* CRT SCANLINE OVERLAY */
+    body::after {
+      content: " ";
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
+      background-size: 100% 3px, 2px 100%;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    a { color: inherit; text-decoration: none; transition: 0.2s; }
+
+    /* ─────────────── MASTHEAD ─────────────── */
+    header.masthead {
+      padding: 1.25rem var(--gutter);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 8, 12, 0.95);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+
+    nav.primary {
+      display: flex;
+      gap: 2rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    nav.primary a:hover { color: var(--cyan); }
+    nav.primary a.active { color: #fff; border-bottom: 1px solid var(--cyan); }
+
+    /* ─────────────── HERO & PROFILE ─────────────── */
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(3rem, 8vh, 5rem) var(--gutter);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-weight: 800;
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      text-transform: uppercase;
+      line-height: 0.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--dim); }
+
+    .profile-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      clip-path: polygon(0 0, 95% 0, 100% 12%, 100% 100%, 5% 100%, 0 88%);
+    }
+
+    .field-label { font-family: var(--mono); font-size: 0.6rem; color: var(--dim); text-transform: uppercase; }
+    .field-value { font-weight: 600; font-size: 0.9rem; text-transform: uppercase; }
+
+    /* ─────────────── SECTION SHARED ─────────────── */
+    section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 4rem var(--gutter);
+      border-top: 1px solid var(--line);
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+    .section-label::before { content: ''; width: 40px; height: 1px; background: var(--cyan); }
+
+    /* ─────────────── 01: PREMISE ─────────────── */
+    .premise-content {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+    }
+    .premise-text p { font-size: 1.1rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .premise-text p.lead { color: var(--text); font-size: 1.3rem; font-weight: 300; }
+    .pull-quote {
+      border-left: 2px solid var(--cyan);
+      padding: 1rem 0 1rem 2rem;
+      font-style: italic;
+      color: var(--text);
+      font-size: 1.4rem;
+      margin: 3rem 0;
+    }
+
+    /* ─────────────── 02: CHAPTERS ─────────────── */
+    .chapter-entry {
+      display: grid; 
+      grid-template-columns: 80px 1fr auto;
+      padding: 1.5rem; 
+      border-bottom: 1px solid var(--line);
+      transition: 0.2s;
+    }
+    .chapter-entry:hover { background: var(--cyan-soft); padding-left: 2rem; }
+    .ch-number { font-family: var(--mono); color: var(--cyan); }
+    .ch-title { font-weight: 700; text-transform: uppercase; color: var(--text); }
+    .ch-status { font-family: var(--mono); font-size: 0.65rem; padding: 0.4rem 0.8rem; border: 1px solid var(--line); }
+    .ch-status.published { color: var(--cyan); border-color: var(--cyan-deep); }
+
+    /* ─────────────── 03: MAKER ─────────────── */
+    .maker-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; }
+    .working-on {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      padding: 2rem;
+      position: relative;
+    }
+    .working-on::before {
+      content: 'STATUS: ACTIVE';
+      position: absolute;
+      top: -10px; left: 1rem;
+      background: var(--bg);
+      padding: 0 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--amber);
+    }
+    .working-on ul { list-style: none; font-family: var(--mono); font-size: 0.8rem; }
+    .working-on li { margin-bottom: 0.5rem; display: flex; gap: 0.5rem; }
+    .working-on li::before { content: '>'; color: var(--amber); }
+
+    /* ─────────────── 04: GALLERY ─────────────── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .gallery-item {
+      aspect-ratio: 1;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      transition: 0.3s;
+    }
+    .gallery-item:hover { border-color: var(--cyan); }
+    .gallery-label {
+      padding: 1.5rem;
+      width: 100%;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+    .gallery-label span { display: block; color: var(--cyan); font-size: 0.6rem; }
+
+    /* ─────────────── 05: LINKS ─────────────── */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .link-card {
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      font-family: var(--mono);
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .link-card:hover { border-color: var(--cyan); background: var(--cyan-soft); color: var(--cyan); }
+    .link-card span { display: block; font-size: 0.6rem; color: var(--dim); margin-top: 0.5rem; }
+
+    @media (max-width: 800px) {
+      .hero, .premise-content, .maker-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="wordmark">Archive // Stillness</div>
+    <nav class="primary">
+      <a href="#premise">Premise</a>
+      <a href="#chapters">Archive</a>
+      <a href="#gallery">Visuals</a>
+      <a href="#comms">Comms</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" style="border-top: none;">
+      <div class="hero-text">
+        <h1 class="hero-title">The Practiced <br><em>Stillness</em></h1>
+        <p class="hero-sub" style="color: var(--muted); margin-bottom: 2rem; max-width: 45ch;">
+          A Jedi spy. Seven years. The cover identities, the moral compromises, and the silence of the Outer Rim.
+        </p>
+        <a href="#chapters" style="background: var(--cyan); color: var(--bg); padding: 1rem 2rem; font-family: var(--mono); font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Initialize Readout</a>
+      </div>
+
+      <div class="profile-card">
+        <div class="field"><span class="field-label">Subject</span><span class="field-value">Saelith Veyra</span></div>
+        <div class="field"><span class="field-label">Species</span><span class="field-value">Echani / Human</span></div>
+        <div class="field"><span class="field-label">Era</span><span class="field-value">26–19 BBY</span></div>
+        <div class="field"><span class="field-label">Status</span><span class="field-value" style="color: var(--amber);">Active Log</span></div>
+      </div>
+    </section>
+
+    <section id="premise">
+      <div class="section-label">01 // The Premise</div>
+      <div class="premise-content">
+        <div class="premise-text">
+          <p class="lead">Star Wars usually shows you the famous Jedi — the duels, the speeches, the dramatic falls. This is the other shelf.</p>
+          <p>Saelith Veyra is a Jedi the Council never quite knows what to do with: Echani, intelligence-trained, running cover identities since she was fourteen. She doesn't fight battles. She works rooms. She turns assets.</p>
+        </div>
+        <div>
+          <blockquote class="pull-quote">
+            "She didn't romanticize the Jedi tradition. She used what worked, and she paid for everything."
+          </blockquote>
+          <p style="color: var(--dim); font-size: 0.9rem; font-style: italic;">The novel begins on Ilum at thirteen and ends on the night Anakin marches on the Temple.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="chapters">
+      <div class="section-label">02 // Data_Log_Sequence</div>
+      <div class="chapter-list">
+        <a href="chapters/ch01.html" class="chapter-entry">
+          <span class="ch-number">01</span>
+          <div class="ch-info">
+            <div class="ch-title">The Ice and the Promise</div>
+            <p style="font-size: 0.85rem; color: var(--muted); font-style: italic;">Ilum, age thirteen. A pilgrimage, a crystal, a master she has not yet met.</p>
+          </div>
+          <span class="ch-status published">Accessed</span>
+        </a>
+        <div class="chapter-entry" style="opacity: 0.4;">
+          <span class="ch-number">02</span>
+          <div class="ch-info">
+            <div class="ch-title">A Silent Frequency</div>
+            <p style="font-size: 0.85rem; color: var(--muted);">Encryption pending...</p>
+          </div>
+          <span class="ch-status">Locked</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="maker">
+      <div class="section-label">03 // Archive Maker</div>
+      <div class="maker-grid">
+        <div class="maker-text">
+          <p style="margin-bottom: 1.5rem;">I've been a Star Wars fan since I was small enough that my world was mostly carpet. Saelith started as a single sentence I couldn't get out of my head: <em>what if the most interesting Jedi in the room was the one nobody noticed?</em></p>
+          <p>This is my long-term portfolio project. I'm using Saelith to learn how to publish across mediums — prose, illustration, comics — and to build something I'm proud of.</p>
+          <p style="margin-top: 2rem; font-family: var(--mono); color: var(--cyan);">— Datara</p>
+        </div>
+        <div class="working-on">
+          <ul>
+            <li>Chapter 01 prose · second pass</li>
+            <li>Saelith full-body reference sheet</li>
+            <li>Ilum cave system layout</li>
+            <li>Character study: Master Calreth</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="section-label">04 // Visual Log Entries</div>
+      <div class="gallery-grid">
+        <div class="gallery-item"><div class="gallery-label"><span>IMG_TYPE: ENVIRONMENT</span>The Crystal Cave</div></div>
+        <div class="gallery-item"><div class="gallery-label"><span>IMG_TYPE: SCHEMATIC</span>Hilt Study</div></div>
+        <div class="gallery-item"><div class="gallery-label"><span>IMG_TYPE: SUBJECT</span>Calreth Profile</div></div>
+        <div class="gallery-item"><div class="gallery-label"><span>IMG_TYPE: ATMOSPHERE</span>Coruscant Rain</div></div>
+      </div>
+    </section>
+
+    <section id="comms">
+      <div class="section-label">05 // Frequency Uplinks</div>
+      <div class="link-grid">
+        <a href="#" class="link-card">AO3 <span>Full Prose Archive</span></a>
+        <a href="#" class="link-card">Instagram <span>Visual Portfolio</span></a>
+        <a href="#" class="link-card">Bluesky <span>Comms & Sketches</span></a>
+        <a href="#" class="link-card">Tumblr <span>Deep Log Cuts</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer style="padding: 4rem var(--gutter); text-align: center; font-family: var(--mono); font-size: 0.6rem; color: var(--dim); border-top: 1px solid var(--line);">
+    &copy; 2026 // PROJECT_STILLNESS // UNLICENSED FAN ARCHIVE // ALL RIGHTS TO LUCASFILM LTD.
+  </footer>
+
+</body>
+</html>
