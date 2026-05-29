@@ -181,10 +181,69 @@ nav.primary a.active::after {
 }
 
 .hero-title em {
-  font-style: normal;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--dim);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--accent);
   display: block;
+  position: relative;
+  text-shadow:
+    0 0 4px color-mix(in srgb, var(--accent) 90%, transparent),
+    0 0 14px color-mix(in srgb, var(--accent) 60%, transparent),
+    0 0 32px color-mix(in srgb, var(--accent) 35%, transparent),
+    0 0 60px color-mix(in srgb, var(--accent) 18%, transparent);
+  animation: holo-flicker 7s linear infinite;
+  /* tiny chromatic offset: subtle RGB split */
+  filter: drop-shadow(1px 0 0 color-mix(in srgb, var(--accent) 25%, transparent))
+          drop-shadow(-1px 0 0 color-mix(in srgb, var(--accent-2) 20%, transparent));
+}
+
+/* Drifting scan band — the giveaway Star Wars holo tell */
+.hero-title em::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  height: 8px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 35%, transparent) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: holo-scanband 6s linear infinite;
+  top: -20%;
+}
+
+@keyframes holo-flicker {
+  0%, 100%        { opacity: 1; }
+  46%             { opacity: 1; }
+  47%             { opacity: 0.78; }
+  48%             { opacity: 1; }
+  49%             { opacity: 0.92; }
+  50%             { opacity: 1; }
+  82%             { opacity: 1; }
+  83%             { opacity: 0.85; }
+  84%             { opacity: 1; }
+  91%             { opacity: 0.94; }
+  92%             { opacity: 1; }
+}
+
+@keyframes holo-scanband {
+  0%   { top: -20%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 120%; opacity: 0; }
+}
+
+/* On Jedi/light theme, the glow needs to read against cream bg —
+   tighter, slightly less spread to avoid washout */
+[data-theme="light"] .hero-title em {
+  text-shadow:
+    0 0 3px color-mix(in srgb, var(--accent) 95%, transparent),
+    0 0 10px color-mix(in srgb, var(--accent) 65%, transparent),
+    0 0 22px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 .hero-sub {
@@ -574,7 +633,7 @@ footer.site-foot .ip {
   transform: rotateX(2deg);
   transition:
     width 0.85s var(--ease-flip),
-    aspect-ratio 0.85s var(--ease-flip),
+    height 0.85s var(--ease-flip),
     box-shadow 0.5s ease,
     background 0.5s ease;
   box-shadow:
@@ -582,14 +641,15 @@ footer.site-foot .ip {
     inset 0 1px 0 color-mix(in srgb, var(--text) 8%, transparent),
     inset 0 -1px 0 var(--bg);
 
-  /* Default = vertical */
+  /* Default = vertical. Cap by both width AND height so the device
+     never exceeds the viewport on small/medium laptop screens. */
   width: min(92vw, 540px);
-  aspect-ratio: 5 / 8;
+  height: min(82vh, 870px);
 }
 
 .datapad[data-orientation="horizontal"] {
   width: min(96vw, 1100px);
-  aspect-ratio: 8 / 5;
+  height: min(78vh, 680px);
 }
 
 /* Physical turn animation */
