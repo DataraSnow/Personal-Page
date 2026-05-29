@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>On the Politics of Maps · Dario Trojan</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+  <!-- NOTE the ../../ — this page is two folders deep, so root files need it. -->
+  <script src="../../theme.js"></script>
+
+  <style>
+    :root{
+      --paper:#ececea; --ink:#0a0a0a; --signal:#1d2dff;
+      --paper-3: color-mix(in srgb, var(--paper) 94%, var(--ink) 6%);
+      --muted: color-mix(in srgb, var(--ink) 55%, var(--paper) 45%);
+      --dim:   color-mix(in srgb, var(--ink) 35%, var(--paper) 65%);
+      --line:  color-mix(in srgb, var(--ink) 16%, transparent);
+      --display:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+      --serif:"Newsreader",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    }
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    body{ background:var(--paper); color:var(--ink); font-family:var(--serif);
+          -webkit-font-smoothing:antialiased; transition:background .2s, color .2s; }
+    a{ color:inherit; }
+    ::selection{ background:var(--signal); color:var(--paper); }
+
+    /* reading-progress bar */
+    .progress{ position:fixed; top:0; left:0; height:3px; width:0; background:var(--signal); z-index:60; }
+
+    /* top bar */
+    .top{ position:sticky; top:0; z-index:50; background:var(--paper);
+      display:flex; justify-content:space-between; align-items:center;
+      padding:16px 40px; border-bottom:1px solid var(--ink);
+      font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+    .top .mark{ font-family:var(--display); font-weight:800; font-size:13px; letter-spacing:-.01em;
+      display:flex; align-items:center; gap:8px; text-decoration:none; }
+    .top .mark .sq{ width:10px; height:10px; background:var(--signal); }
+    .top .r{ display:flex; align-items:center; gap:18px; color:var(--muted); }
+    .top .r a{ text-decoration:none; } .top .r a:hover{ color:var(--ink); }
+    .mode-toggle{ appearance:none; background:transparent; border:1px solid var(--line);
+      width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;
+      color:var(--ink); cursor:pointer; padding:0; }
+    .mode-toggle:hover{ border-color:var(--ink); color:var(--signal); }
+    .mode-toggle svg{ width:16px; height:16px; }
+
+    /* article header */
+    header.art{ padding:80px 40px 48px; border-bottom:1px solid var(--ink); }
+    header.art .kicker{ font-family:var(--mono); font-size:11px; letter-spacing:.18em;
+      text-transform:uppercase; color:var(--signal); margin-bottom:20px; }
+    header.art h1{ font-family:var(--display); font-weight:800; text-transform:uppercase;
+      font-size:clamp(40px,7vw,96px); line-height:.9; letter-spacing:-.035em; max-width:14ch; }
+    header.art .by{ margin-top:28px; display:flex; flex-wrap:wrap; gap:10px 26px;
+      font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+    header.art .by b{ color:var(--ink); font-weight:500; }
+
+    /* the reading column */
+    article{ max-width:42rem; margin:0 auto; padding:56px 24px 40px; font-size:20px; line-height:1.7; }
+    article > p{ margin-bottom:1.3em; text-wrap:pretty; }
+    article > p:first-of-type::first-letter{ font-family:var(--display); font-weight:800;
+      float:left; font-size:3.4em; line-height:.72; padding:6px 12px 0 0; color:var(--signal); }
+    article h2{ font-family:var(--display); font-weight:700; text-transform:uppercase;
+      font-size:15px; letter-spacing:.14em; color:var(--signal);
+      margin:2.4em 0 .9em; padding-top:1.4em; border-top:1px solid var(--line); }
+    article em{ font-style:italic; }
+    article .pull{ font-family:var(--serif); font-style:italic; font-size:clamp(26px,3.4vw,38px);
+      line-height:1.25; letter-spacing:-.01em; color:var(--ink); text-align:center;
+      max-width:20ch; margin:1.6em auto; text-wrap:balance; }
+    article sup a{ font-family:var(--mono); font-size:.55em; color:var(--signal); text-decoration:none;
+      vertical-align:super; padding:0 1px; }
+
+    .notes{ max-width:42rem; margin:0 auto; padding:8px 24px 0;
+      font-family:var(--display); font-size:13px; line-height:1.55; color:var(--dim); }
+    .notes h3{ font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--muted); margin-bottom:12px; }
+    .notes p{ display:grid; grid-template-columns:18px 1fr; gap:8px; margin-bottom:8px; }
+    .notes .n{ font-family:var(--mono); font-size:9px; color:var(--signal); }
+
+    footer.art{ max-width:42rem; margin:0 auto; padding:48px 24px 96px; }
+    footer.art a{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+      text-decoration:none; border-bottom:2px solid var(--ink); padding-bottom:4px; }
+    footer.art a:hover{ color:var(--signal); border-color:var(--signal); }
+
+    @media(max-width:680px){ .top,header.art{ padding-left:22px; padding-right:22px; } }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <div class="top">
+    <a class="mark" href="../../index.html"><span class="sq"></span>D · TROJAN</a>
+    <div class="r">
+      <a href="../../archive.html">← Archive</a>
+      <button class="mode-toggle" id="themeBtn"></button>
+    </div>
+  </div>
+
+  <header class="art">
+    <div class="kicker">WRITE · 06 · Essay</div>
+    <h1>On the Politics of Maps</h1>
+    <div class="by">
+      <span>By <b>Dario Trojan</b></span>
+      <span>2025</span>
+      <span>≈ 7,400 words · 28 min</span>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       The whole essay lives right here, as ordinary HTML. A piece
+       of any length belongs in a file like this — NOT in content.js.
+       Add <h2> for sections, <p> for paragraphs, <span class="pull">
+       for a pull-quote. Duplicate this whole folder for the next one.
+       ============================================================ -->
+  <article>
+    <p>Every map makes an argument before it makes a measurement. The choice of what to draw, at what scale, in which colours, and — above all — what to leave out, is settled long before a single coordinate is plotted. We are taught to read maps as neutral instruments, mirrors held up to the land. They are nothing of the kind.</p>
+
+    <p>The cartographer inherits a set of conventions so familiar that they have become invisible: north at the top, the home nation at the centre, the sea a calm and uniform blue. Each of these is a decision, and each decision carries a politics. To centre one place is to make every other place peripheral. To smooth the sea is to erase the people who drown in it.</p>
+
+    <h2>I · The tyranny of the straight line</h2>
+
+    <p>Borders on a map are drawn with a confidence the ground rarely earns. A river shifts its course; a mountain pass closes with the season; a community spills across a line that was ruled, in some distant office, with no knowledge of the valley it cut in two. The map asserts permanence where the world offers only negotiation.<sup><a href="#fn1" id="r1">1</a></sup></p>
+
+    <p class="pull">The map is not the territory — but the map is also a way of holding the territory.</p>
+
+    <p>This is the quiet violence of cartography: not that it lies, but that it forgets it is speaking at all. A boundary printed cleanly enough begins to feel like a fact of nature rather than an outcome of force.</p>
+
+    <h2>II · Who is allowed to be visible</h2>
+
+    <p>To appear on a map is to be counted, taxed, defended, governed. To be left off it is to be, administratively, nowhere. The history of mapping is in large part a history of deciding who would be rendered and who would be dissolved into blank space — the <em>terra nullius</em> that was never empty, only unlisted.<sup><a href="#fn2" id="r2">2</a></sup></p>
+
+    <p>The same logic runs through the data maps of the present. A dataset is a frame, and a frame has edges. What falls outside the query falls outside the picture, and what falls outside the picture is easy to govern as though it did not exist.</p>
+
+    <h2>III · Counter-mapping</h2>
+
+    <p>If a map can disappear a people, it can also restore them. Counter-mapping — communities drawing their own ground, on their own terms — turns the instrument back on itself. The tools are the same; the authorship is not. And authorship, in the end, is the whole argument.</p>
+
+    <p>This is the work I keep returning to: not to make a truer map, since there is no such thing, but to make an <em>honest</em> one — a map that admits its hand, names its omissions, and leaves the reader free to disagree with it.</p>
+  </article>
+
+  <div class="notes">
+    <h3>Notes</h3>
+    <p id="fn1"><span class="n">1</span><span>On the instability of borders, and the maps that pretend otherwise. <a href="#r1" style="color:var(--signal);text-decoration:none">↩</a></span></p>
+    <p id="fn2"><span class="n">2</span><span>The doctrine of empty land, and the surveys that manufactured it. <a href="#r2" style="color:var(--signal);text-decoration:none">↩</a></span></p>
+  </div>
+
+  <footer class="art">
+    <a href="../../archive.html">← Back to the archive</a>
+  </footer>
+
+  <script>
+    DTTheme.mountToggle(document.getElementById('themeBtn'));
+    // Reading-progress bar (no storage, nothing to break).
+    var bar = document.getElementById('progress');
+    function onScroll(){
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    }
+    document.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+  </script>
+</body>
+</html>
