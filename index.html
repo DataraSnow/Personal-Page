@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dario Trojan</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Caveat&family=JetBrains+Mono&family=Newsreader:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- All editable content lives here (works, timeline, links). Edit content.js, not this file. -->
+  <script src="content.js"></script>
+
+  <style>
+    html, body { margin: 0; padding: 0; }
+    body { background: #ececea; -webkit-font-smoothing: antialiased; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const galleryCss = `
+    .gallery{
+      --paper:#f1eee5;
+      --ink:#0a0a0a;
+      --signal:#1d2dff;
+      --paper-2: color-mix(in srgb, var(--paper) 88%, var(--ink) 12%);
+      --paper-3: color-mix(in srgb, var(--paper) 94%, var(--ink) 6%);
+      --ink-soft: color-mix(in srgb, var(--ink) 80%, var(--paper) 20%);
+      --muted:   color-mix(in srgb, var(--ink) 55%, var(--paper) 45%);
+      --dim:     color-mix(in srgb, var(--ink) 30%, var(--paper) 70%);
+      --line:      color-mix(in srgb, var(--ink) 18%, transparent);
+      --line-soft: color-mix(in srgb, var(--ink) 8%,  transparent);
+
+      --display:"Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --serif:"Newsreader", Georgia, serif;
+      --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+      --hand:"Caveat", "Comic Sans MS", cursive;
+
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      width: 100%;
+      min-height: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+    .gallery a{ color: inherit; text-decoration: none; }
+    .gallery *::selection{ background: var(--signal); color: var(--paper); }
+
+    /* ────── TOP BAR ────── */
+    .gallery .top{
+      display:flex; justify-content: space-between; align-items: center;
+      padding: 18px 48px;
+      border-bottom: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      position: sticky; top: 0;
+      background: var(--paper);
+      z-index: 50;
+    }
+    .gallery .top .l{ display:flex; gap: 28px; align-items: center; }
+    .gallery .top .l .mark{
+      font-family: var(--display); font-weight: 800; letter-spacing: -.01em;
+      font-size: 13px; text-transform: uppercase;
+    }
+    .gallery .top .l .mark .sq{
+      display:inline-block; width: 10px; height: 10px;
+      background: var(--signal); margin-right: 8px; vertical-align: 1px;
+    }
+    .gallery .top .r{ display:flex; gap: 28px; color: var(--muted); align-items: center; }
+    .gallery .top .r a:hover{ color: var(--ink); }
+    .gallery .top .r .now{ color: var(--ink); display:flex; align-items:center; gap: 8px; }
+    .gallery .top .r .now::before{
+      content:""; width:7px; height:7px; background: var(--signal);
+      animation: blink 2.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%, 70%, 100% { opacity: 1; } 80% { opacity: .3; } }
+    .gallery .top .r .mode-toggle{
+      appearance:none; background:transparent;
+      border: 1px solid var(--line);
+      width: 30px; height: 30px;
+      display:inline-flex; align-items:center; justify-content:center;
+      color: var(--ink) !important;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+      padding: 0;
+    }
+    .gallery .top .r .mode-toggle:hover{ border-color: var(--ink); color: var(--signal) !important; }
+    .gallery .top .r .mode-toggle svg{ width: 16px; height: 16px; }
+
+    /* ────── HERO ────── */
+    .gallery .hero{
+      padding: 84px 48px 48px;
+      position: relative;
+      border-bottom: 1px solid var(--ink);
+      overflow: hidden;
+    }
+    .gallery .hero h1{
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(80px, 13vw, 196px);
+      line-height: .82;
+      letter-spacing: -.045em;
+      margin: 0;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .gallery .hero h1 .line2{ display: block; }
+    .gallery .hero h1 .dot{
+      display:inline-block; width: .55em; height: .55em;
+      background: var(--signal); margin-left: .04em; margin-bottom: .04em;
+      vertical-align: baseline;
+    }
+    .gallery .hero .subtitle{
+      margin: 28px 0 0;
+      display:flex; align-items: baseline; gap: 18px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .gallery .hero .subtitle .lead{
+      color: var(--ink);
+    }
+    .gallery .hero .subtitle .sep{
+      display:inline-block; width: 4px; height: 4px;
+      background: var(--muted); opacity: .5;
+      transform: rotate(45deg);
+    }
+    .gallery .hero .subtitle .sig{
+      color: var(--signal);
+    }
+    .gallery .hero .tagrow{
+      display:grid;
+      grid-template-columns: 1.4fr 1fr;
+      align-items: end;
+      gap: 60px;
+      margin-top: 36px;
+    }
+    .gallery .hero .tag{
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(26px, 3vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin: 0;
+      max-width: 18ch;
+      text-wrap: balance;
+    }
+    .gallery .hero .tag .hl{
+      color: var(--signal);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .gallery .hero-aim{
+      display:flex; flex-direction: column; align-items: flex-end; gap: 14px;
+    }
+    .gallery .hero-aim .cross{ width: 88px; height: 88px; color: var(--signal); }
+    .gallery .hero-aim .coords{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+      display:inline-flex; align-items: center; gap: 10px;
+    }
+    .gallery .hero-aim .coords .dot{
+      width: 5px; height: 5px; background: var(--signal); display:inline-block;
+    }
+
+    /* faint compass watermark in hero */
+    .gallery .geo{ position:absolute; pointer-events:none; color: var(--ink); }
+    .gallery .geo svg{ display:block; width: 100%; height: 100%; }
+    .gallery .geo-compass-1{ bottom: -140px; left: -140px; width: 420px; height: 420px; opacity: .035; }
+    .gallery .hero > *:not(.geo){ position: relative; z-index: 1; }
+
+    /* ────── DISCIPLINE TICKER ────── */
+    .gallery .ticker{
+      display: block;
+      overflow: hidden;
+      border-bottom: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-weight: 400;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      white-space: nowrap;
+      position: relative;
+    }
+    .gallery .ticker .track{
+      display: flex;
+      width: max-content;
+      animation: marquee 60s linear infinite;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    /* hidden measurer — one base set, used to compute how many repeats fill the viewport */
+    .gallery .ticker-measure{
+      position: absolute; top: 0; left: 0;
+      visibility: hidden; pointer-events: none;
+      display: flex; width: max-content; white-space: nowrap;
+    }
+    @keyframes marquee {
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(-50%, 0, 0); }
+    }
+    .gallery .ticker .cell{
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 14px 22px;
+      gap: 22px;
+    }
+    .gallery .ticker .diamond{
+      width: 5px; height: 5px;
+      background: var(--paper);
+      opacity: .45;
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* ────── LIVE STATUS STRIP ────── */
+    .gallery .live{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--ink);
+    }
+    .gallery .live > div{
+      padding: 18px 22px;
+      border-right: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+    .gallery .live > div:last-child{ border-right: 0; }
+    .gallery .live .k{ display:block; margin-bottom: 6px; }
+    .gallery .live .v{ color: var(--ink); font-size: 12.5px; letter-spacing: .04em; text-transform: none; }
+    .gallery .live .v .sig{ color: var(--signal); }
+    .gallery .live .v .mini{ display:inline-block; width: 6px; height: 6px; background: var(--signal); margin-right: 6px; vertical-align: 1px; }
+
+    /* ────── SECTION HEADER ────── */
+    .gallery section.block{
+      padding: 84px 48px;
+      border-bottom: 1px solid var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    .gallery section.block:last-of-type{ border-bottom: 0; }
+    .gallery .sec-h{
+      display:grid; grid-template-columns: 220px 1fr;
+      align-items: baseline;
+      gap: 40px;
+      margin-bottom: 48px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .gallery .sec-h .n{
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--signal);
+    }
+    .gallery .sec-h .t{
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(36px, 4.5vw, 64px);
+      line-height: .95;
+      letter-spacing: -.025em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    /* ────── ABOUT (with footnotes) ────── */
+    .gallery .about{
+      display:grid; grid-template-columns: 220px 1.4fr 1fr;
+      gap: 40px;
+    }
+    .gallery .about .col-margin{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+      padding-top: 8px;
+      line-height: 1.8;
+    }
+    .gallery .about .col-1{ position: relative; }
+    .gallery .about .col-1 p{
+      font-family: var(--display);
+      font-size: 19px; line-height: 1.5;
+      margin: 0 0 1em;
+      color: var(--ink);
+      max-width: 36ch;
+      text-wrap: pretty;
+    }
+    .gallery .about .col-1 .lead{
+      font-family: var(--serif); font-style: italic;
+      font-size: 24px; line-height: 1.4;
+      color: var(--ink);
+    }
+    .gallery .about .col-1 p .em{ color: var(--signal); }
+    .gallery .about .col-1 sup.fn{
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--signal);
+      letter-spacing: .04em;
+      padding: 0 1px 0 2px;
+      vertical-align: super;
+      line-height: 0;
+      cursor: help;
+    }
+    .gallery .about .col-2 .notes{
+      margin-top: 30px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+      max-width: 46ch;
+    }
+    .gallery .about .col-2 .notes .note{
+      display:grid; grid-template-columns: 13px 1fr;
+      gap: 0 7px;
+      align-items: start;
+      padding: 4px 0;
+    }
+    .gallery .about .col-2 .notes .note .n{
+      font-family: var(--mono); font-size: 8.5px;
+      color: var(--muted);
+      letter-spacing: .02em;
+      line-height: 1.7;
+    }
+    .gallery .about .col-2 .notes .note .tx{
+      font-family: var(--display);
+      font-size: 11px; line-height: 1.5;
+      color: var(--dim);
+      text-wrap: pretty;
+    }
+    .gallery .about .col-2 .notes em{ font-family: var(--serif); font-style: italic; }
+
+    .gallery .about .col-2{ position: relative; }
+    .gallery .about .col-2 dl{
+      margin: 0; padding: 0;
+      display:grid; grid-template-columns: 110px 1fr;
+      gap: 14px 24px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: .08em; text-transform: uppercase;
+      align-content: start;
+    }
+    .gallery .about .col-2 dt{ color: var(--muted); }
+    .gallery .about .col-2 dd{ margin: 0; color: var(--ink); }
+    .gallery .about .col-2 dd .sig{ color: var(--signal); }
+
+    /* ────── WORKS (hover-preview list) ────── */
+    .gallery .works-list{
+      border-top: 1px solid var(--ink);
+      position: relative;
+    }
+    .gallery .work-row{
+      display:grid;
+      grid-template-columns: 90px 1.2fr 2fr 100px 24px;
+      gap: 24px;
+      align-items: center;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line-soft);
+      position: relative;
+      transition: padding .25s ease, background-color .15s ease;
+      font-family: var(--display);
+    }
+    .gallery .work-row:hover{ padding-left: 14px; background: var(--paper-3); }
+    .gallery .work-row .id{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .12em; color: var(--signal);
+      text-transform: uppercase;
+    }
+    .gallery .work-row .tt{
+      font-family: var(--display); font-weight: 600;
+      font-size: clamp(22px, 2.3vw, 32px);
+      line-height: 1.05; letter-spacing: -.018em;
+      color: var(--ink);
+    }
+    .gallery .work-row .tt em{ font-family: var(--serif); font-style: italic; font-weight: 400; }
+    .gallery .work-row .meta{
+      font-family: var(--display); font-size: 14.5px;
+      color: var(--muted); line-height: 1.45;
+      max-width: 48ch;
+    }
+    .gallery .work-row .yr{
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: .12em; color: var(--muted);
+      text-align: right; text-transform: uppercase;
+    }
+    .gallery .work-row .ar{
+      font-family: var(--mono); font-size: 16px;
+      color: var(--dim);
+      justify-self: end;
+      transition: color .15s, transform .25s;
+    }
+    .gallery .work-row:hover .ar{
+      color: var(--signal);
+      transform: translate(3px, -3px);
+    }
+    .gallery .work-row:hover .yr{ color: var(--ink); }
+    .gallery .work-row:hover .tt{ color: var(--ink); }
+
+    /* Floating preview */
+    .gallery .preview{
+      position: fixed;
+      top: 0; left: 0;
+      width: 240px; height: 180px;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      transform: translate(var(--px, 0), var(--py, 0)) scale(.9);
+      transform-origin: top left;
+      transition: opacity .18s ease, transform .18s ease;
+      border: 1px solid var(--ink);
+      background: var(--paper-2);
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,.18);
+    }
+    .gallery .preview.show{ opacity: 1; transform: translate(var(--px, 0), var(--py, 0)) scale(1); }
+    .gallery .preview .fill{ position:absolute; inset:0; }
+    .gallery .preview img.fill{ width:100%; height:100%; object-fit: cover; }
+    .gallery .preview .id{
+      position:absolute; top: 10px; left: 10px;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .14em; color: rgba(255,255,255,.92);
+      background: rgba(0,0,0,.5); padding: 3px 6px;
+    }
+    .gallery .preview .tag{
+      position:absolute; bottom: 10px; left: 10px;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .14em; color: rgba(255,255,255,.92);
+    }
+
+    /* Per-work generated fills (consistent across row + preview) */
+    .gallery .fill-w0{ background: linear-gradient(160deg, #c4763f 0%, #5e3618 100%); }
+    .gallery .fill-w1{ background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 14px),
+      repeating-linear-gradient(0deg,  rgba(255,255,255,.06) 0 1px, transparent 1px 14px),
+      linear-gradient(180deg, #1f2a3a 0%, #0c121c 100%); }
+    .gallery .fill-w2{ background:
+      radial-gradient(circle at 30% 40%, rgba(29,45,255,.6), transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(255,80,40,.5), transparent 55%),
+      #0a0a0a; }
+    .gallery .fill-w3{ background: linear-gradient(170deg, #8a6f4c 0%, #4a3a26 100%); }
+    .gallery .fill-w4{ background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 8px, transparent 8px 18px),
+      linear-gradient(180deg, #2e2925 0%, #0d0b08 100%); }
+    .gallery .fill-w5{ background:
+      radial-gradient(circle at 60% 50%, rgba(255,255,255,.18), transparent 40%),
+      linear-gradient(220deg, #4a5d52 0%, #1a241f 100%); }
+
+    .gallery .archive-link{
+      display:inline-flex; align-items: center; gap: 14px;
+      margin-top: 40px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--ink);
+      font-family: var(--display);
+      font-weight: 700; font-size: 18px;
+      text-transform: uppercase; letter-spacing: -.01em;
+    }
+    .gallery .archive-link:hover{ color: var(--signal); border-color: var(--signal); }
+
+    /* ────── PULLED QUOTE / RHYTHM BREAK ────── */
+    .gallery .breakout{
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--ink);
+      background: var(--paper-3);
+      position: relative;
+      overflow: hidden;
+    }
+    .gallery .breakout .mark{
+      font-family: var(--mono);
+      font-size: 80px;
+      line-height: 1;
+      color: var(--signal);
+      position: absolute;
+      top: 32px; left: 36px;
+      letter-spacing: -.05em;
+    }
+    .gallery .breakout blockquote{
+      margin: 0 auto;
+      max-width: 18ch;
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.1;
+      letter-spacing: -.015em;
+      text-align: center;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+    .gallery .breakout blockquote .hl{
+      color: var(--signal);
+    }
+    .gallery .breakout cite{
+      display: block;
+      margin-top: 28px;
+      text-align: center;
+      font-family: var(--mono);
+      font-style: normal;
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .gallery .breakout cite::before{
+      content:""; display:inline-block;
+      width: 20px; height: 1px;
+      background: var(--muted);
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    /* ────── NOW: activity + timeline ────── */
+    .gallery .now-wrap{
+      display:grid; grid-template-columns: 220px 1fr;
+      gap: 40px;
+    }
+    .gallery .now-activity{
+      display:grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .gallery .act{
+      border-top: 1px solid var(--ink);
+      padding: 16px 0 0;
+    }
+    .gallery .act .h{
+      display:flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .gallery .act .h .pulse{
+      display:inline-flex; align-items: center; gap: 6px;
+      color: var(--signal);
+    }
+    .gallery .act .h .pulse::before{
+      content:""; width: 6px; height: 6px; background: var(--signal);
+      animation: blink 2s ease-in-out infinite;
+    }
+    .gallery .act .what{
+      font-family: var(--display); font-weight: 500;
+      font-size: 19px; line-height: 1.3;
+      color: var(--ink);
+      margin: 0 0 6px;
+    }
+    .gallery .act .what em{ font-family: var(--serif); font-style: italic; }
+    .gallery .act .meta{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .gallery .timeline{
+      border-top: 1px solid var(--ink);
+      padding-top: 24px;
+    }
+    .gallery .timeline h4{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 18px;
+      font-weight: 400;
+    }
+    .gallery .tl-row{
+      display:grid;
+      grid-template-columns: 100px 1fr 110px 100px;
+      gap: 22px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .gallery .tl-row .id{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .14em; color: var(--signal);
+      text-transform: uppercase;
+    }
+    .gallery .tl-row .what{
+      font-family: var(--display); font-weight: 500;
+      font-size: 18px; line-height: 1.35; color: var(--ink);
+    }
+    .gallery .tl-row .what em{ font-family: var(--serif); font-style: italic; font-weight: 400; }
+    .gallery .tl-row .progress{
+      display:inline-flex; align-items: center; gap: 8px;
+    }
+    .gallery .tl-row .progress .bar{
+      display:inline-flex; height: 8px; flex: 1;
+      border: 1px solid var(--muted);
+    }
+    .gallery .tl-row .progress .bar i{
+      display:block; height: 100%; flex: 1;
+      border-right: 1px solid var(--muted);
+    }
+    .gallery .tl-row .progress .bar i:last-child{ border-right: 0; }
+    .gallery .tl-row .progress .bar i.on{ background: var(--ink); }
+    .gallery .tl-row .progress .bar i.now{ background: var(--signal); }
+    .gallery .tl-row .progress .pct{
+      font-family: var(--mono); font-size: 10px;
+      color: var(--muted); letter-spacing: .12em;
+    }
+    .gallery .tl-row .when{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted); text-align: right;
+    }
+
+    /* ────── ELSEWHERE ────── */
+    .gallery .else-table{
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap: 0 60px;
+    }
+    .gallery .else-table a{
+      display:grid; grid-template-columns: 32px 130px 1fr 16px;
+      align-items: center; gap: 18px;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+    .gallery .else-table a:nth-last-of-type(1),
+    .gallery .else-table a:nth-last-of-type(2){ border-bottom: 1px solid var(--line); }
+    .gallery .else-table .ico{
+      width: 24px; height: 24px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .gallery .else-table .ico svg{ width: 12px; height: 12px; }
+    .gallery .else-table a:hover .ico{ background: var(--signal); border-color: var(--signal); color: var(--paper); }
+    .gallery .else-table .lbl{
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .gallery .else-table .hd{
+      font-family: var(--display); font-weight: 600;
+      font-size: 20px; letter-spacing: -.005em;
+      color: var(--ink);
+    }
+    .gallery .else-table .ar{ font-family: var(--mono); color: var(--dim); font-size: 14px; }
+    .gallery .else-table a:hover .hd{ color: var(--signal); }
+    .gallery .else-table a:hover .ar{ color: var(--signal); }
+
+    /* ────── FOOTER / COLOPHON ────── */
+    .gallery footer{
+      padding: 36px 48px;
+      border-top: 1px solid var(--ink);
+      display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 36px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .gallery footer h5{
+      font-size: 10px; letter-spacing: .16em;
+      color: var(--ink); font-weight: 500;
+      margin: 0 0 12px;
+    }
+    .gallery footer .copy .mark{
+      font-family: var(--display); font-weight: 800;
+      font-size: 22px; letter-spacing: -.01em;
+      color: var(--ink); text-transform: uppercase;
+      display:flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+    }
+    .gallery footer .copy .mark .sq{
+      display:inline-block; width: 14px; height: 14px; background: var(--signal);
+    }
+    .gallery footer .copy p{
+      font-family: var(--display); font-size: 13px;
+      letter-spacing: 0; text-transform: none;
+      color: var(--muted); margin: 0 0 8px; max-width: 32ch;
+      line-height: 1.5;
+    }
+    .gallery footer ul{ list-style: none; padding: 0; margin: 0; line-height: 1.9; }
+    .gallery footer ul li a:hover{ color: var(--signal); }
+    .gallery footer .end{
+      grid-column: 1 / -1;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+      display:flex; justify-content: space-between; align-items: center;
+      margin-top: 8px;
+    }
+    .gallery footer .end .barcode{
+      display:inline-flex; gap: 2px; height: 14px;
+    }
+    .gallery footer .end .barcode i{ width: 2px; background: var(--muted); display:block; }
+
+    /* ────── RESPONSIVE ────── */
+    @media (max-width: 900px){
+      .gallery .hero .tagrow{ grid-template-columns: 1fr; gap: 28px; }
+      .gallery .hero-aim{ align-items: flex-start; }
+      .gallery .live{ grid-template-columns: 1fr 1fr; }
+      .gallery .live > div:nth-child(2){ border-right: 0; }
+      .gallery .sec-h{ grid-template-columns: 1fr; gap: 18px; }
+      .gallery .about{ grid-template-columns: 1fr; }
+      .gallery .work-row{ grid-template-columns: 60px 1fr 24px; gap: 14px; padding: 16px 0; }
+      .gallery .work-row .meta, .gallery .work-row .yr{ display: none; }
+      .gallery .now-wrap{ grid-template-columns: 1fr; }
+      .gallery .now-activity{ grid-template-columns: 1fr; }
+      .gallery .tl-row{ grid-template-columns: 80px 1fr; gap: 12px; }
+      .gallery .tl-row .progress, .gallery .tl-row .when{ grid-column: 1 / -1; padding-left: 92px; }
+      .gallery .else-table{ grid-template-columns: 1fr; }
+      .gallery footer{ grid-template-columns: 1fr 1fr; }
+      .gallery .top .r a{ display: none; }
+      .gallery .top .r .now{ display: none; }
+    }
+    `;
+
+    function GeoCrosshair(){
+      return (
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2">
+          <line x1="50" y1="4"  x2="50" y2="36"/>
+          <line x1="50" y1="64" x2="50" y2="96"/>
+          <line x1="4"  y1="50" x2="36" y2="50"/>
+          <line x1="64" y1="50" x2="96" y2="50"/>
+          <rect x="40" y="40" width="20" height="20"/>
+          <circle cx="50" cy="50" r="1.6" fill="currentColor" stroke="none"/>
+        </svg>
+      );
+    }
+
+    function GeoCompassRose(){
+      const ticks = Array.from({length: 32});
+      return (
+        <svg viewBox="-110 -110 220 220" fill="none" stroke="currentColor" strokeWidth=".6">
+          <circle r="100"/>
+          <circle r="82"/>
+          <circle r="44"/>
+          {ticks.map((_,i)=>{
+            const a = i * Math.PI / 16;
+            const major = i % 4 === 0;
+            const r1 = major ? 82 : 92;
+            return <line key={i} x1={Math.sin(a)*r1} y1={-Math.cos(a)*r1}
+                                x2={Math.sin(a)*100} y2={-Math.cos(a)*100}
+                                strokeWidth={major ? 1 : .5}/>;
+          })}
+          <polygon points="0,-100 6,-10 0,0 -6,-10" fill="currentColor" stroke="none"/>
+          <polygon points="0,-44 4,-10 0,0 -4,-10" fill="currentColor" stroke="none" opacity=".4"/>
+          <polygon points="100,0 10,6 0,0 10,-6" fill="currentColor" stroke="none" opacity=".55"/>
+          <polygon points="0,100 6,10 0,0 -6,10" fill="currentColor" stroke="none" opacity=".55"/>
+          <polygon points="-100,0 -10,6 0,0 -10,-6" fill="currentColor" stroke="none" opacity=".55"/>
+          <line x1="-58" y1="-58" x2="58" y2="58"/>
+          <line x1="-58" y1="58"  x2="58" y2="-58"/>
+          <circle r="3" fill="currentColor" stroke="none"/>
+          <text x="0" y="-104" textAnchor="middle" fontFamily="JetBrains Mono" fontSize="10" fill="currentColor" stroke="none" letterSpacing="2">N</text>
+        </svg>
+      );
+    }
+
+    /* ────── MINI ICONS for Elsewhere ────── */
+    const Icons = {
+      mail: () => (<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3"><rect x="1.5" y="3" width="13" height="10"/><path d="M1.5 3 L8 9 L14.5 3"/></svg>),
+      github: () => (<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 0 0-2.5 15.6c.4.1.5-.2.5-.4v-1.5c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.4.7 0-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-3.9 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.5 7.5 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.5.8 1.2.8 2.1 0 3-1.8 3.7-3.6 3.9.3.3.6.8.6 1.6v2.3c0 .2.1.5.6.4A8 8 0 0 0 8 0z"/></svg>),
+      instagram: () => (<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2"><rect x="2" y="2" width="12" height="12"/><circle cx="8" cy="8" r="3"/><circle cx="11.5" cy="4.5" r=".8" fill="currentColor"/></svg>),
+      arena: () => (<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2"><circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/><circle cx="8" cy="11" r="2.5"/></svg>),
+      masto: () => (<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M2.5 10 V5.5 C2.5 3.6 4 2.5 6 2.5 H10 C12 2.5 13.5 3.6 13.5 5.5 V10"/><path d="M5.5 7 V9.5 M8 7 V9.5 M10.5 7 V9.5"/></svg>),
+      cv: () => (<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2"><rect x="3" y="2" width="10" height="12"/><line x1="5" y1="5" x2="11" y2="5"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="5" y1="11" x2="9" y2="11"/></svg>),
+    };
+
+    function useViennaTime(){
+      const [t, setT] = React.useState(() => new Date());
+      React.useEffect(() => {
+        const id = setInterval(() => setT(new Date()), 1000 * 30);
+        return () => clearInterval(id);
+      }, []);
+      try {
+        return new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit', minute: '2-digit', hour12: false,
+          timeZone: 'Europe/Vienna',
+        }).format(t);
+      } catch { return '—'; }
+    }
+
+    const Ticker = React.memo(function Ticker(){
+      const items = ['ART','ILLUSTRATION','GIS & CARTOGRAPHY','PROGRAMMING','WRITING','POLITICS'];
+      const measureRef = React.useRef(null);
+      const [repeats, setRepeats] = React.useState(2);
+
+      // Repeat the base set enough times that ONE half of the track always
+      // spans at least the full viewport — that keeps the -50% marquee loop
+      // seamless on any screen size (no gap, no visible reset jump).
+      React.useLayoutEffect(() => {
+        const compute = () => {
+          const el = measureRef.current;
+          if (!el) return;
+          const setWidth = el.scrollWidth;
+          if (!setWidth) return;
+          // one extra set as a safety margin so the seam never enters the viewport
+          setRepeats(Math.max(2, Math.ceil(window.innerWidth / setWidth) + 1));
+        };
+        compute();
+        window.addEventListener('resize', compute);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(compute);
+        return () => window.removeEventListener('resize', compute);
+      }, []);
+
+      // one half = items repeated `repeats` times; the track is two identical halves
+      const half = [];
+      for (let r = 0; r < repeats; r++) half.push(...items);
+      const doubled = [...half, ...half];
+
+      return (
+        <div className="ticker" aria-hidden="true">
+          <div className="ticker-measure" ref={measureRef} aria-hidden="true">
+            {items.map((w, i) => (
+              <div className="cell" key={i}><span>{w}</span><span className="diamond"></span></div>
+            ))}
+          </div>
+          <div className="track" style={{ animationDuration: (repeats * 60) + 's' }}>
+            {doubled.map((w, i) => (
+              <div className="cell" key={i}>
+                <span>{w}</span>
+                <span className="diamond" aria-hidden="true"></span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    });
+
+    function DirectionB({ mode = 'light', onToggleMode } = {}){
+      // All works come from content.js. The home page shows the first six.
+      const allWorks = (window.SITE && window.SITE.works) || [];
+      const works = allWorks.slice(0, 6);
+      const timeline = (window.SITE && window.SITE.timeline) || [];
+      const links = (window.SITE && window.SITE.links) || [];
+
+      const galleryRef = React.useRef(null);
+      const previewRef = React.useRef(null);
+      const [hoverWork, setHoverWork] = React.useState(null);
+      const time = useViennaTime();
+
+      // Floating preview follows cursor
+      React.useEffect(() => {
+        const root = galleryRef.current;
+        if (!root) return;
+        const onMove = (e) => {
+          const x = e.clientX, y = e.clientY;
+          if (previewRef.current) {
+            const ox = 20, oy = 20;
+            const w = 240;
+            const rightEdge = window.innerWidth - x;
+            const px = rightEdge < (w + 60) ? x - w - 20 : x + ox;
+            previewRef.current.style.setProperty('--px', px + 'px');
+            previewRef.current.style.setProperty('--py', (y + oy) + 'px');
+          }
+        };
+        const onLeave = () => { setHoverWork(null); };
+        document.addEventListener('mousemove', onMove);
+        window.addEventListener('blur', onLeave);
+        root.addEventListener('mouseleave', onLeave);
+        return () => {
+          document.removeEventListener('mousemove', onMove);
+          window.removeEventListener('blur', onLeave);
+          root.removeEventListener('mouseleave', onLeave);
+        };
+      }, []);
+
+      return (
+        <>
+          <style>{galleryCss}</style>
+          <div className="gallery" ref={galleryRef}>
+
+            {/* FLOATING WORK PREVIEW — image comes from the hovered work's data */}
+            <div className={`preview ${hoverWork !== null ? 'show' : ''}`} ref={previewRef} aria-hidden="true">
+              {hoverWork !== null && works[hoverWork] && (
+                <>
+                  {/* gradient fallback — always present, sits behind the image */}
+                  <div className="fill" style={{ background: works[hoverWork].fill }}></div>
+                  {/* the actual photo; if the file is missing it hides itself and the gradient shows */}
+                  {works[hoverWork].image && (
+                    <img className="fill img" src={works[hoverWork].image} alt=""
+                         onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  )}
+                  <span className="id">{works[hoverWork].id}</span>
+                  <span className="tag">{works[hoverWork].tag}</span>
+                </>
+              )}
+            </div>
+
+            {/* TOP BAR */}
+            <div className="top">
+              <div className="l">
+                <span className="mark"><span className="sq"></span>D · TROJAN</span>
+                <span>INDEX / 2026</span>
+              </div>
+              <div className="r">
+                <span className="now">OPEN · COMMISSIONS</span>
+                <a href="#works">Works</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                {onToggleMode && (
+                  <button className="mode-toggle" onClick={onToggleMode}
+                    aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                    {mode === 'dark' ? (
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
+                        <circle cx="8" cy="8" r="3"/>
+                        <line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/>
+                        <line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/>
+                        <line x1="3" y1="3" x2="4.3" y2="4.3"/><line x1="11.7" y1="11.7" x2="13" y2="13"/>
+                        <line x1="13" y1="3" x2="11.7" y2="4.3"/><line x1="4.3" y1="11.7" x2="3" y2="13"/>
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
+                        <path d="M13 9.5 A 5.5 5.5 0 1 1 6.5 3 A 4 4 0 0 0 13 9.5 Z" fill="currentColor" stroke="none"/>
+                      </svg>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* HERO */}
+            <section className="hero">
+              <div className="geo geo-compass-1"><GeoCompassRose /></div>
+              <h1>
+                DARIO
+                <span className="line2">TROJAN<span className="dot"></span></span>
+              </h1>
+              <div className="subtitle">
+                <span className="lead">An index of paintings, maps, software &amp; writing.</span>
+                <span className="sep" aria-hidden="true"></span>
+                <span>Mülheim, DE</span>
+                <span className="sep" aria-hidden="true"></span>
+                <span className="sig">Open for commissions</span>
+              </div>
+              <div className="tagrow">
+                <p className="tag">&ldquo;Creativity is the <span className="hl">song</span> of the soul.&rdquo;</p>
+                <div className="hero-aim" aria-hidden="true">
+                  <div className="cross"><GeoCrosshair /></div>
+                  <div className="coords"><span className="dot"></span>51.4281° N · 6.8792° E</div>
+                </div>
+              </div>
+            </section>
+
+            {/* TICKER (marquee, memoized so time updates don't restart it) */}
+            <Ticker />
+
+            {/* LIVE STATUS STRIP */}
+            <div className="live">
+              <div>
+                <span className="k">Mülheim · local</span>
+                <span className="v"><span className="mini"></span>{time} CET</span>
+              </div>
+              <div>
+                <span className="k">Currently reading</span>
+                <span className="v">Emilia Roig — <em>Why we matter</em></span>
+              </div>
+              <div>
+                <span className="k">In the studio</span>
+                <span className="v">Acrylics on linen · piece no. 04</span>
+              </div>
+              <div>
+                <span className="k">Status</span>
+                <span className="v"><span className="sig">●</span> Commissions open · Okt 26</span>
+              </div>
+            </div>
+
+            {/* ABOUT */}
+            <section className="block" id="about">
+              <div className="sec-h">
+                <div className="n">§ 01 / About</div>
+                <h2 className="t">Working between<br/>art &amp; software.</h2>
+              </div>
+              <div className="about">
+                <div className="col-margin">
+                  § 01<br/>
+                  ABOUT<br/>
+                  —<br/>
+                  Mülheim<br/>
+                  MAY 2026
+                </div>
+                <div className="col-1">
+                  <p className="lead">I&rsquo;m Dario — an artist, mapmaker (Geomaticist), and programmer working out of Mülheim.</p>
+                  <p>The work moves between mediums but pulls in one direction: making <span className="em">the invisible legible</span><sup className="fn">1</sup>. Paintings of the fun and dramatic. Maps of the mundane and interesting<sup className="fn">2</sup>. Small, deliberately quiet software tools and fun websites.</p>
+                  <p>I work with cities, different firms, and  everything connected to rails. Right now I&rsquo;m working as a Geoinformation Specialist for the DVG and study Environmental-Informatics<sup className="fn">3</sup> from October 2026 on.</p>
+                </div>
+                <div className="col-2">
+                  <dl>
+                    <dt>Born</dt><dd>2003 · Oberhausen</dd>
+                    <dt>Based</dt><dd>Mülheim, DE</dd>
+                    <dt>Studied</dt><dd> Bochum University of Applied Sciences</dd>
+                    <dt>Tools</dt><dd>Oil · QGIS · ArcGis · Rust · Pen</dd>
+                    <dt>Languages</dt><dd>DE · EN · ES</dd>
+                    <dt>Working with</dt><dd>cities · firms · studios</dd>
+                    <dt>Status</dt><dd><span className="sig">●</span> Commissions open</dd>
+                  </dl>
+
+                  <div className="notes">
+                    <div className="note"><span className="n">1</span><span className="tx">A phrase stolen from <em>James C. Scott</em>, and unlikely to be returned.</span></div>
+                    <div className="note"><span className="n">2</span><span className="tx">Maps are always interesting. What they are about, not always.</span></div>
+                    <div className="note"><span className="n">3</span><span className="tx">Cartography, data viz, editorial design — working and studying</span></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* WORKS */}
+            <section className="block" id="works">
+              <div className="sec-h">
+                <div className="n">§ 02 / Works · Selected</div>
+                <h2 className="t">Six recent<br/>pieces.</h2>
+              </div>
+              <div className="works-list">
+                {works.map((w, idx) => {
+                  // Use the work's own url if it has one, else the built-in template page.
+                  const href = w.url ? w.url : `work.html?w=${w.slug}`;
+                  const external = /^https?:/.test(w.url || '');
+                  return (
+                    <a className="work-row" key={w.slug} href={href}
+                       target={external ? '_blank' : undefined}
+                       rel={external ? 'noopener noreferrer' : undefined}
+                       onMouseEnter={() => setHoverWork(idx)}
+                       onMouseLeave={() => setHoverWork(null)}>
+                      <span className="id">{w.id}</span>
+                      <span className="tt"><em>{w.title}</em></span>
+                      <span className="meta">{w.desc}</span>
+                      <span className="yr">{w.year}</span>
+                      <span className="ar">↗</span>
+                    </a>
+                  );
+                })}
+              </div>
+              <a className="archive-link" href="archive.html">Full archive · {allWorks.length} works <span aria-hidden="true">→</span></a>
+            </section>
+
+            {/* PULLED QUOTE — rhythm break */}
+            <aside className="breakout" aria-label="Pulled quote">
+              <span className="mark" aria-hidden="true">“</span>
+              <blockquote>
+                The map is not the territory — but the <span className="hl">map is also a way</span> of holding the territory.
+              </blockquote>
+              <cite>With apologies to Alfred Korzybski · March 2026</cite>
+            </aside>
+
+            {/* NOW & NEXT */}
+            <section className="block" id="now">
+              <div className="sec-h">
+                <div className="n">§ 03 / Now &amp; next</div>
+                <h2 className="t">What I&rsquo;m<br/>making.</h2>
+              </div>
+              <div className="now-wrap">
+                <div></div>
+                <div>
+                  <div className="now-activity">
+                    <div className="act">
+                      <div className="h"><span>This week</span><span className="pulse">Live</span></div>
+                      <p className="what">Finishing the calculations on <em>Rail Statistics 2026</em>.</p>
+                      <div className="meta">Studio · 6 weeks in</div>
+                    </div>
+                    <div className="act">
+                      <div className="h"><span>This month</span><span>Active</span></div>
+                      <p className="what">Refactoring <em>Ruhrarea by Foot</em> — adding a quiet-light mode for evening walks.</p>
+                      <div className="meta">Code · v0.4 →</div>
+                    </div>
+                    <div className="act">
+                      <div className="h"><span>This season</span><span>Open</span></div>
+                      <p className="what">Drafting an essay, <em>The Atlas Is Not the Land</em>.</p>
+                      <div className="meta">Writing · 2,100 / 7,000 words</div>
+                    </div>
+                  </div>
+
+                  <div className="timeline">
+                    <h4>Timeline · forthcoming</h4>
+                    {timeline.map(item => {
+                      // How far between start and due is *today*? 0 before it begins, 1 once due.
+                      const start = +new Date(item.start);
+                      const due   = +new Date(item.due);
+                      const now   = Date.now();
+                      const frac  = (due <= start) ? 0
+                        : Math.max(0, Math.min(1, (now - start) / (due - start)));
+                      // Paint a 5-segment bar from that fraction.
+                      const SEG = 5;
+                      const done = frac >= 1 ? SEG : Math.floor(frac * SEG);
+                      const cells = Array.from({ length: SEG }, (_, j) =>
+                        j < done ? 'on' : (j === done && frac < 1 ? 'now' : ''));
+                      return (
+                        <div className="tl-row" key={item.id}>
+                          <span className="id">{item.id}</span>
+                          <span className="what">
+                            {item.title && <em>{item.title}</em>}
+                            {item.title && item.note ? ' — ' : ''}
+                            {item.note}
+                          </span>
+                          <span className="progress">
+                            <span className="bar">
+                              {cells.map((c, j) => <i key={j} className={c}></i>)}
+                            </span>
+                          </span>
+                          <span className="when">{item.when}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* ELSEWHERE */}
+            <section className="block" id="contact">
+              <div className="sec-h">
+                <div className="n">§ 04 / Elsewhere</div>
+                <h2 className="t">Contact<br/>&amp; links.</h2>
+              </div>
+              <div className="else-table">
+                {links.map((lnk, j) => {
+                  const Icon = Icons[lnk.icon] || (() => null);
+                  const external = /^https?:/.test(lnk.href);
+                  return (
+                    <a href={lnk.href} key={j}
+                       target={external ? '_blank' : undefined}
+                       rel={external ? 'noopener noreferrer' : undefined}>
+                      <span className="ico"><Icon /></span>
+                      <span className="lbl">{lnk.label}</span>
+                      <span className="hd">{lnk.handle}</span>
+                      <span className="ar">{lnk.arrow}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* FOOTER / COLOPHON */}
+            <footer>
+              <div className="copy">
+                <div className="mark"><span className="sq"></span>D · TROJAN</div>
+                <p>A working index of paintings, maps, software and writing.</p>
+              </div>
+              <div>
+                <h5>Scrolling</h5>
+                <ul>
+                  <li><a href="#works">Works</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#now">Now</a></li>
+                  <li><a href="#contact">Contact</a></li>
+                </ul>
+              </div>
+              <div>
+                <h5>Elsewhere</h5>
+                <ul>
+                  <li><a href="https://github.com/DataraSnow">Personal Page</a></li>
+                  <li><a href="https://de.linkedin.com/in/dario-trojan-1a454521b">LinkedIN</a></li>
+                  <li><a href="#">Are.na</a></li>
+                  <li><a href="#">Mastodon</a></li>
+                </ul>
+              </div>
+              <div>
+                <h5>Colophon</h5>
+                <ul>
+                  <li>Set in Archivo</li>
+                  <li>+ JetBrains Mono</li>
+                  <li>+ Newsreader (italic)</li>
+                  <li>· Written on burning parchment</li>
+                </ul>
+              </div>
+
+              <div className="end">
+                <span>© 2026 Dario Trojan · All rights reserved</span>
+                <span className="barcode" aria-hidden="true">
+                  {[3,1,2,4,1,2,3,1,4,2,1,3,2,4,1,2,3,1,2,4].map((w,i)=>(<i key={i} style={{width:w+'px', opacity: i%3===0?.7:.4}}></i>))}
+                </span>
+                <span>Updated 29.05.26 · Mülheim, DE</span>
+              </div>
+            </footer>
+
+          </div>
+        </>
+      );
+    }
+
+    // ── Theme ─────────────────────────────────────────────────────────────────
+    // Two palettes: [paper, ink, signal]. The toggle in the top bar swaps them.
+    const LIGHT = { paper: '#ececea', ink: '#0a0a0a', signal: '#1d2dff' };
+    const DARK  = { paper: '#0e0e10', ink: '#ededeb', signal: '#ed3a13' };
+
+    function App() {
+      // Read the shared theme (set on any page); fall back to light if storage is blocked.
+      const [dark, setDark] = React.useState(() => {
+        try { return localStorage.getItem('dt-theme') === 'dark'; } catch (e) { return false; }
+      });
+      const theme = dark ? DARK : LIGHT;
+
+      React.useEffect(() => {
+        const root = document.querySelector('.gallery');
+        if (root) {
+          root.style.setProperty('--paper', theme.paper);
+          root.style.setProperty('--ink', theme.ink);
+          root.style.setProperty('--signal', theme.signal);
+        }
+        document.body.style.background = theme.paper;
+        try { localStorage.setItem('dt-theme', dark ? 'dark' : 'light'); } catch (e) {}
+      }, [dark]);
+
+      return (
+        <DirectionB
+          mode={dark ? 'dark' : 'light'}
+          onToggleMode={() => setDark(d => !d)}
+        />
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Archive · Dario Trojan</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono&family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+  <script src="theme.js"></script>     <!-- light/dark; applies before paint -->
+  <script src="content.js"></script>   <!-- the works data -->
+
+  <style>
+    :root{
+      --paper:#ececea; --ink:#0a0a0a; --signal:#1d2dff;
+      --paper-2: color-mix(in srgb, var(--paper) 88%, var(--ink) 12%);
+      --paper-3: color-mix(in srgb, var(--paper) 94%, var(--ink) 6%);
+      --muted: color-mix(in srgb, var(--ink) 55%, var(--paper) 45%);
+      --dim:   color-mix(in srgb, var(--ink) 30%, var(--paper) 70%);
+      --line:  color-mix(in srgb, var(--ink) 16%, transparent);
+      --display:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+      --serif:"Newsreader",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    }
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    body{ background:var(--paper); color:var(--ink); font-family:var(--display);
+          -webkit-font-smoothing:antialiased; transition:background .2s, color .2s; }
+    a{ color:inherit; text-decoration:none; }
+    ::selection{ background:var(--signal); color:var(--paper); }
+
+    /* ── top bar ── */
+    .top{ display:flex; justify-content:space-between; align-items:center;
+      padding:18px 40px; border-bottom:1px solid var(--ink); position:sticky; top:0;
+      background:var(--paper); z-index:50;
+      font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+    .top .l{ display:flex; gap:26px; align-items:center; }
+    .top .mark{ font-family:var(--display); font-weight:800; letter-spacing:-.01em;
+      font-size:13px; display:flex; align-items:center; gap:8px; }
+    .top .mark .sq{ width:10px; height:10px; background:var(--signal); }
+    .top .r{ display:flex; gap:22px; align-items:center; color:var(--muted); }
+    .top .r a:hover{ color:var(--ink); }
+    .mode-toggle{ appearance:none; background:transparent; border:1px solid var(--line);
+      width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;
+      color:var(--ink); cursor:pointer; padding:0; transition:border-color .15s, color .15s; }
+    .mode-toggle:hover{ border-color:var(--ink); color:var(--signal); }
+    .mode-toggle svg{ width:16px; height:16px; }
+
+    /* ── header ── */
+    .head{ padding:64px 40px 36px; border-bottom:1px solid var(--ink);
+      display:flex; justify-content:space-between; align-items:flex-end; gap:30px; }
+    .head .n{ font-family:var(--mono); font-size:11px; letter-spacing:.18em;
+      text-transform:uppercase; color:var(--signal); margin-bottom:16px; }
+    .head h1{ font-family:var(--display); font-weight:800; text-transform:uppercase;
+      font-size:clamp(44px,8vw,108px); line-height:.86; letter-spacing:-.035em; }
+    .head .cross{ width:72px; height:72px; color:var(--signal); flex-shrink:0; }
+    @media(max-width:680px){ .head .cross{ display:none; } }
+
+    /* ── filter bar ── */
+    .filters{ display:flex; flex-wrap:wrap; gap:10px; padding:20px 40px;
+      border-bottom:1px solid var(--line); font-family:var(--mono); }
+    .filters button{ appearance:none; background:transparent; border:1px solid var(--line);
+      color:var(--muted); font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
+      text-transform:uppercase; padding:7px 14px; cursor:pointer;
+      transition:border-color .15s, color .15s, background .15s; }
+    .filters button:hover{ border-color:var(--ink); color:var(--ink); }
+    .filters button[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+
+    /* ── gallery grid ── */
+    .grid{ display:grid; gap:1px; background:var(--line);
+      grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); border-bottom:1px solid var(--ink); }
+    .card{ display:block; background:var(--paper); padding:22px 22px 20px; position:relative;
+      transition:background .15s; }
+    .card:hover{ background:var(--paper-3); }
+    .thumb{ position:relative; aspect-ratio:4/3; overflow:hidden; border:1px solid var(--ink);
+      background:var(--paper-2); }
+    .thumb img{ width:100%; height:100%; object-fit:cover; display:block;
+      transition:transform .5s cubic-bezier(.2,.7,.3,1); }
+    .card:hover .thumb img{ transform:scale(1.04); }
+    .thumb .ref{ position:absolute; top:8px; left:8px; font-family:var(--mono); font-size:9.5px;
+      letter-spacing:.14em; color:#fff; background:rgba(0,0,0,.55); padding:3px 7px; }
+    /* tiny corner crosshairs over the image, CAD/map feel */
+    .thumb .c{ position:absolute; width:10px; height:10px; pointer-events:none; opacity:.9; }
+    .thumb .c::before,.thumb .c::after{ content:""; position:absolute; background:rgba(255,255,255,.7); }
+    .thumb .c::before{ width:10px; height:1px; top:0; }
+    .thumb .c::after{ width:1px; height:10px; left:0; }
+    .thumb .c.tr{ top:6px; right:6px; } .thumb .c.tr::before{ right:0; } .thumb .c.tr::after{ right:0; left:auto; }
+    .thumb .c.bl{ bottom:6px; left:6px; } .thumb .c.bl::before{ bottom:0; top:auto; } .thumb .c.bl::after{ bottom:0; }
+
+    .cap{ display:flex; justify-content:space-between; align-items:baseline; gap:14px; margin-top:16px; }
+    .cap .tt{ font-family:var(--display); font-weight:600; font-size:23px; line-height:1.1;
+      letter-spacing:-.015em; }
+    .cap .tt em{ font-family:var(--serif); font-style:italic; font-weight:400; }
+    .cap .yr{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--muted); flex-shrink:0; }
+    .sub{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+    .sub .tag{ font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--signal); }
+    .sub .ar{ font-family:var(--mono); color:var(--dim); transition:color .15s, transform .25s; }
+    .card:hover .sub .ar{ color:var(--signal); transform:translate(3px,-3px); }
+    .desc{ font-size:13.5px; color:var(--muted); line-height:1.5; margin-top:10px; max-width:42ch; }
+
+    .foot{ padding:28px 40px; font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
+      text-transform:uppercase; color:var(--muted); display:flex; justify-content:space-between; }
+    .foot a:hover{ color:var(--signal); }
+
+    @media(max-width:680px){
+      .top,.head,.filters,.foot{ padding-left:22px; padding-right:22px; }
+      .grid{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="l">
+      <a class="mark" href="index.html"><span class="sq"></span>D · TROJAN</a>
+      <span>Archive / 2026</span>
+    </div>
+    <div class="r">
+      <a href="index.html">Home</a>
+      <button class="mode-toggle" id="themeBtn"></button>
+    </div>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="n">§ Archive · all works</div>
+      <h1>The full<br>index.</h1>
+    </div>
+    <svg class="cross" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2">
+      <line x1="50" y1="4" x2="50" y2="36"/><line x1="50" y1="64" x2="50" y2="96"/>
+      <line x1="4" y1="50" x2="36" y2="50"/><line x1="64" y1="50" x2="96" y2="50"/>
+      <rect x="40" y="40" width="20" height="20"/><circle cx="50" cy="50" r="1.6" fill="currentColor" stroke="none"/>
+    </svg>
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="foot">
+    <span>© 2026 Dario Trojan</span>
+    <a href="index.html">← Back home</a>
+  </div>
+
+  <script>
+    DTTheme.mountToggle(document.getElementById('themeBtn'));
+
+    var works = (window.SITE && window.SITE.works) || [];
+
+    // Build a card from one work object.
+    function card(w) {
+      var img = w.image
+        ? '<img src="' + w.image + '" alt="' + w.title +
+          '" onerror="this.parentNode.style.background=\'' + (w.fill || '') + '\';this.remove();">'
+        : '';
+      // Use the work's own url if set, else the built-in template page.
+      var href = w.url ? w.url : 'work.html?w=' + w.slug;
+      var external = /^https?:/.test(w.url || '');
+      var attrs = external ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return '<a class="card" href="' + href + '"' + attrs + ' data-tag="' + w.tag + '">' +
+        '<div class="thumb" style="background:' + (w.fill || 'var(--paper-2)') + '">' + img +
+          '<span class="ref">' + w.id + '</span>' +
+          '<span class="c tr"></span><span class="c bl"></span>' +
+        '</div>' +
+        '<div class="cap"><span class="tt"><em>' + w.title + '</em></span>' +
+          '<span class="yr">' + w.year + '</span></div>' +
+        '<div class="desc">' + w.desc + '</div>' +
+        '<div class="sub"><span class="tag">' + w.tag + '</span><span class="ar">↗</span></div>' +
+      '</a>';
+    }
+
+    function render(filter) {
+      var list = (filter && filter !== 'ALL') ? works.filter(function (w) { return w.tag === filter; }) : works;
+      document.getElementById('grid').innerHTML = list.map(card).join('');
+    }
+
+    // Filter buttons: "All" plus every unique tag, in first-seen order.
+    var tags = ['ALL'];
+    works.forEach(function (w) { if (tags.indexOf(w.tag) === -1) tags.push(w.tag); });
+    var current = 'ALL';
+    document.getElementById('filters').innerHTML = tags.map(function (t) {
+      return '<button data-f="' + t + '" aria-pressed="' + (t === 'ALL') + '">' +
+        (t === 'ALL' ? 'All · ' + works.length : t) + '</button>';
+    }).join('');
+    document.getElementById('filters').addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      current = b.getAttribute('data-f');
+      [].forEach.call(this.querySelectorAll('button'), function (x) {
+        x.setAttribute('aria-pressed', x === b);
+      });
+      render(current);
+    });
+
+    render('ALL');
+  </script>
+</body>
+</html>
