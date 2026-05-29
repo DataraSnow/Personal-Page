@@ -1,0 +1,23 @@
+{
+  "arcs": [
+    {
+      "title": "Arc I: The Gathering Storm",
+      "chapters": [
+        {
+          "id": "01",
+          "title": "The Ice and the Promise",
+          "desc": "Ilum, 26 BBY. A pilgrimage that defines a path.",
+          "status": "published",
+          "url": "chapters/ch01.html"
+        },
+        {
+          "id": "02",
+          "title": "A Silent Frequency",
+          "desc": "REDACTED // Security Level 4 Required",
+          "status": "redacted",
+          "url": "#"
+        }
+      ]
+    }
+  ]
+}
