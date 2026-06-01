@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Chapter 01 // The Ice and the Promise — Stillness</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Chapter 01 // The Ice and the Promise — Stillness</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="datapad.css">
 
-<link rel="stylesheet" href="reader.css">
-
-<script>
+  <script>
+  /* apply saved Jedi/Sith mode before paint (drives both room + screen) */
   (function() {
-    var t = localStorage.getItem('stillness-theme') || 'dark';
-    document.documentElement.dataset.theme = t;
+    var p = new URLSearchParams(location.search);
+    var preview = p.has('chassis') || p.has('ambiance') || p.has('focus');
+    var ls = function(k){ return preview ? null : localStorage.getItem(k); };
+    var amb = p.get('ambiance') || ls('dp-ambiance') || 'sith';
+    document.documentElement.setAttribute('data-ambiance', amb === 'jedi' ? 'jedi' : 'sith');
   })();
-</script>
+  </script>
 </head>
 <body>
 
@@ -27,9 +30,13 @@
     <button class="dir-toggle" id="dirToggle" aria-label="Open chapter directory">☰ Index</button>
   </div>
   <div class="bar-title">CH.01 // The Ice and the Promise</div>
-  <div class="theme-toggle" role="group" aria-label="Theme">
-    <span class="opt" data-theme-set="light">JEDI</span>
-    <span class="opt active" data-theme-set="dark">SITH</span>
+  <div class="bar-right">
+    <div class="seg ambiance-seg" role="group" aria-label="Mode">
+      <span class="seg-label">MODE</span>
+      <span class="opt" data-ambiance-set="jedi" title="Jedi — daylight screen, cool room">JEDI</span>
+      <span class="opt" data-ambiance-set="sith" title="Sith — dark holo screen, warm room">SITH</span>
+    </div>
+    <button class="focus-btn" id="focusBtn" aria-pressed="false" title="Distraction-free reading (F)">▣ <span class="fb-label">Focus</span></button>
   </div>
 </header>
 
@@ -70,7 +77,7 @@ the rendezvous point"
   <aside class="directory" id="directory" aria-label="Chapter directory">
     <div class="directory-header">DATA_LOG_INDEX</div>
     <ol class="directory-list">
-      <li class="dir-item current" data-href="ch01.html">
+      <li class="dir-item current" data-href="Datapad Reader.html">
         <span class="num">CH.01</span>
         <span class="name">The Ice and the Promise</span>
       </li>
@@ -90,111 +97,145 @@ the rendezvous point"
     <div class="directory-foot">SEC.LVL — 4 // ACTIVE</div>
   </aside>
 
-  <div class="datapad" id="datapad" data-orientation="vertical">
+  <div class="datapad" id="datapad" data-chassis="sentinel">
 
-    <span class="chassis-print print-tl" aria-hidden="true">DTPD/J-7</span>
-    <span class="chassis-print print-tr" aria-hidden="true">REV.3</span>
-    <span class="chassis-print print-bl" aria-hidden="true">PROP. ARC</span>
-    <span class="chassis-print print-br" aria-hidden="true">⚠ SEC.4</span>
-
-    <div class="bezel-top">
-      <span class="screw tl" aria-hidden="true"></span>
-      <span class="screw tr" aria-hidden="true"></span>
-
-      <div class="bezel-top-left">
-        <div class="led-strip" aria-hidden="true">
-          <span class="led on white blink"></span>
-          <span class="led on amber"></span>
-          <span class="led on accent"></span>
-        </div>
-        <span class="speaker-grille" aria-hidden="true"></span>
-      </div>
-
-      <div class="bezel-top-right">
-        <div class="device-id">
-          <span class="sensor-lens" aria-hidden="true"></span>
-          UNIT-J7-ARC
-        </div>
-        <div class="live-status">
-          <svg class="signal-bars" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true">
-            <rect x="0" y="6" width="2" height="2"/>
-            <rect x="3" y="4" width="2" height="4"/>
-            <rect x="6" y="2" width="2" height="6"/>
-            <rect x="9" y="0" width="2" height="8"/>
-          </svg>
-        </div>
-      </div>
+    <!-- RAIL · LEFT — chunky greeblies -->
+    <div class="rail rail-left" aria-hidden="true">
+      <span class="cyl"></span>
+      <span class="rib"></span>
+      <span class="cyl"></span>
+      <span class="port"></span>
+      <span class="bolt"></span>
     </div>
 
-    <div class="screen">
-      <div class="screen-header">
-        <div class="screen-title">
-          <span class="ch-num">01</span>The Ice and the Promise
+    <div class="core">
+
+      <span class="chassis-print print-tl" aria-hidden="true">DTPD/J-7</span>
+      <span class="chassis-print print-tr" aria-hidden="true">REV.3</span>
+      <span class="chassis-print print-bl" aria-hidden="true">PROP. ARC</span>
+      <span class="chassis-print print-br" aria-hidden="true">⚠ SEC.4</span>
+
+      <div class="bezel-top">
+        <span class="screw tl" aria-hidden="true"></span>
+        <span class="screw tr" aria-hidden="true"></span>
+
+        <div class="bezel-top-left">
+          <div class="led-strip" aria-hidden="true">
+            <span class="led on white blink"></span>
+            <span class="led on amber"></span>
+            <span class="led on accent"></span>
+          </div>
+          <span class="speaker-grille" aria-hidden="true"></span>
         </div>
-        <div class="screen-meta">
-          <span>ILUM // 26 BBY</span>
-          <span class="meta-read" id="readMeta">— W // — MIN</span>
+
+        <div class="bezel-top-right">
+          <div class="device-id">
+            <span class="sensor-lens" aria-hidden="true"></span>
+            UNIT-J7-ARC
+          </div>
+          <div class="live-status">
+            <svg class="signal-bars" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true">
+              <rect x="0" y="6" width="2" height="2"></rect>
+              <rect x="3" y="4" width="2" height="4"></rect>
+              <rect x="6" y="2" width="2" height="6"></rect>
+              <rect x="9" y="0" width="2" height="8"></rect>
+            </svg>
+          </div>
         </div>
       </div>
 
-      <div class="screen-content" id="screenContent">
-        <article class="prose" id="prose">
+      <div class="screen">
+        <div class="screen-header">
+          <div class="scan-gauge" aria-hidden="true">
+            <svg viewBox="0 0 44 44">
+              <circle class="g-track" cx="22" cy="22" r="18"></circle>
+              <circle class="g-ticks" cx="22" cy="22" r="20.5"></circle>
+              <circle class="g-prog" id="gaugeProg" cx="22" cy="22" r="18"></circle>
+            </svg>
+            <span class="g-pct" id="gaugePct">0</span>
+          </div>
+          <div class="sh-text">
+            <div class="screen-title">
+              <span class="ch-num">01</span>The Ice and the Promise
+            </div>
+            <div class="screen-meta">
+              <span>ILUM // 26 BBY</span>
+              <span class="meta-read" id="readMeta">— W // — MIN</span>
+            </div>
+          </div>
+        </div>
 
-          <p>The snow on Ilum doesn't just fall; it bites. Saelith pulled her robes tighter, the Echani-weave struggling against the gale. Around her, the gathering of younglings had thinned to silence — each one swallowed already by the cave, each one alone with whatever the ice would tell them about themselves.</p>
+        <div class="screen-content" id="screenContent">
+          <article class="prose" id="prose">
 
-          <p>She was thirteen years old and a long way from home. Home, of course, was a word the Order discouraged. She had been told this since she was four. She had also been told, more recently and more quietly, that she had a particular talent for not showing what she had been told.</p>
+            <p>The snow on Ilum doesn't just fall; it bites. Saelith pulled her robes tighter, the Echani-weave struggling against the gale. Around her, the gathering of younglings had thinned to silence — each one swallowed already by the cave, each one alone with whatever the ice would tell them about themselves.</p>
 
-          <div class="scene-break">— ⟡ —</div>
+            <p>She was thirteen years old and a long way from home. Home, of course, was a word the Order discouraged. She had been told this since she was four. She had also been told, more recently and more quietly, that she had a particular talent for not showing what she had been told.</p>
 
-          <figure class="comic placeholder">
-            <span class="ph-name">// IMAGE_BLOCK 01.A</span>
-            <span class="ph-tag">PENDING DECLASSIFICATION</span>
-          </figure>
+            <div class="scene-break">— ⟡ —</div>
 
-          <p>The cave was warmer than the wind, which is the only kindness anyone could honestly say about it. The walls were ice but not the dead ice of the surface. They were lit from inside, from somewhere, by the particular blue light that the Echani called <em>tilan</em> — the colour, her grandmother had once said, of an honest answer.</p>
+            <figure class="comic placeholder">
+              <span class="ph-name">// IMAGE_BLOCK 01.A</span>
+              <span class="ph-tag">PENDING DECLASSIFICATION</span>
+            </figure>
 
-          <p>She did not call her grandmother her grandmother. Not in front of anyone. The Order did not approve of grandmothers.</p>
+            <p>The cave was warmer than the wind, which is the only kindness anyone could honestly say about it. The walls were ice but not the dead ice of the surface. They were lit from inside, from somewhere, by the particular blue light that the Echani called <em>tilan</em> — the colour, her grandmother had once said, of an honest answer.</p>
 
-          <p>She walked.</p>
+            <p>She did not call her grandmother her grandmother. Not in front of anyone. The Order did not approve of grandmothers.</p>
 
-          <div class="scene-break">— ⟡ —</div>
+            <p>She walked.</p>
 
-          <p>Saelith reached for the crystal. It didn't hum. It <em>screamed</em> — in a frequency only a spy could understand. Not a sound. A shape: the shape of a question being answered before it was asked.</p>
+            <div class="scene-break">— ⟡ —</div>
 
-          <blockquote>The Force does not always speak in voices. Sometimes it sets a single word on the table, and waits to see if you'll pick it up.</blockquote>
+            <p>Saelith reached for the crystal. It didn't hum. It <em>screamed</em> — in a frequency only a spy could understand. Not a sound. A shape: the shape of a question being answered before it was asked.</p>
 
-          <p>She picked it up.</p>
+            <blockquote>The Force does not always speak in voices. Sometimes it sets a single word on the table, and waits to see if you'll pick it up.</blockquote>
 
-          <div class="chapter-end">/// END_OF_LOG ///</div>
+            <p>She picked it up.</p>
 
-          <a class="next-locked" aria-disabled="true">
-            <div class="nl-label">NEXT FILE // CH.02</div>
-            <div class="nl-title">A Daughter, Briefly</div>
-            <div class="nl-cta">⚠ DECRYPTION REQUIRED // SEC.LVL 4</div>
-          </a>
+            <div class="chapter-end">/// END_OF_LOG ///</div>
 
-        </article>
+            <a class="next-locked" aria-disabled="true">
+              <div class="nl-label">NEXT FILE // CH.02</div>
+              <div class="nl-title">A Daughter, Briefly</div>
+              <div class="nl-cta">⚠ DECRYPTION REQUIRED // SEC.LVL 4</div>
+            </a>
+
+          </article>
+        </div>
       </div>
-    </div>
 
-    <div class="bezel-bottom">
-      <span class="screw bl" aria-hidden="true"></span>
-      <span class="screw br" aria-hidden="true"></span>
-      <span class="datacard-slot" aria-hidden="true"></span>
+      <div class="bezel-bottom">
+        <span class="screw bl" aria-hidden="true"></span>
+        <span class="screw br" aria-hidden="true"></span>
+        <span class="datacard-slot" aria-hidden="true"></span>
 
-      <div class="controls">
-        <button class="control prev" id="btnPrev" disabled title="Previous chapter (←)">← Prev</button>
-        <button class="control next" id="btnNext" disabled title="Next chapter (→)">Next →</button>
+        <div class="controls">
+          <button class="control prev" id="btnPrev" disabled="" title="Previous chapter (←)">← Prev</button>
+          <button class="control next" id="btnNext" disabled="" title="Next chapter (→)">Next →</button>
+        </div>
+        <div class="progress" aria-label="Reading progress">
+          <span class="progress-bar"><span class="progress-fill" id="progressFill"></span></span>
+          <span class="progress-text" id="progressText">0%</span>
+        </div>
+        <div class="controls">
+          <span class="vent-grille" aria-hidden="true"></span>
+          <button class="control" id="btnFontDown" title="Decrease text size">A−</button>
+          <button class="control" id="btnFontUp" title="Increase text size">A+</button>
+        </div>
       </div>
-      <div class="progress" aria-label="Reading progress">
-        <span class="progress-bar"><span class="progress-fill" id="progressFill"></span></span>
-        <span class="progress-text" id="progressText">0%</span>
-      </div>
-      <div class="controls">
-        <span class="vent-grille" aria-hidden="true"></span>
-        <button class="control" id="btnFontDown" title="Decrease text size">A−</button>
-        <button class="control" id="btnFontUp" title="Increase text size">A+</button>
-      </div>
+
+    </div><!-- /core -->
+
+    <!-- RAIL · RIGHT -->
+    <div class="rail rail-right" aria-hidden="true">
+      <span class="cyl short"></span>
+      <span class="bolt"></span>
+      <span class="cyl"></span>
+      <span class="rib"></span>
+      <span class="cyl short"></span>
+      <span class="spine">UNIT-J7-ARC // SEC.LVL 4 // ILUM 26 BBY</span>
+      <span class="spine-bar"><span class="spine-fill" id="spineFill"></span></span>
     </div>
 
   </div>
@@ -261,216 +302,6 @@ the rendezvous point"
   </div>
 </div>
 
-<script>
-(function() {
-  const root = document.documentElement;
-  const stage = document.getElementById('stage');
-  const datapad = document.getElementById('datapad');
-  const directory = document.getElementById('directory');
-  const dirToggle = document.getElementById('dirToggle');
-  const screenContent = document.getElementById('screenContent');
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
-  const btnFontUp = document.getElementById('btnFontUp');
-  const btnFontDown = document.getElementById('btnFontDown');
-  const btnPrev = document.getElementById('btnPrev');
-  const btnNext = document.getElementById('btnNext');
-  const boot = document.getElementById('bootOverlay');
-  const readMeta = document.getElementById('readMeta');
-  const prose = document.getElementById('prose');
-
-  /* ── DATAPAD SIZING ───────────────────────── */
-  function sizeDatapad() {
-    const stageRect = stage.getBoundingClientRect();
-    const styles = getComputedStyle(stage);
-    const padX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
-    const padY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
-    const wide = matchMedia('(min-width: 1100px)').matches;
-    const sidebarSpace = wide ? 280 + 16 : 0;
-    const availW = Math.max(200, stageRect.width  - padX - sidebarSpace);
-    const availH = Math.max(200, stageRect.height - padY);
-    const orient = datapad.dataset.orientation;
-    const ratio = orient === 'vertical' ? 5 / 8 : 8 / 5;
-    const heightFromW = availW / ratio;
-    let w, h;
-    if (heightFromW <= availH) { w = availW; h = heightFromW; }
-    else { h = availH; w = h * ratio; }
-    if (orient === 'vertical')   w = Math.min(w, 540);
-    if (orient === 'horizontal') w = Math.min(w, 980);
-    h = w / ratio;
-    datapad.style.width  = w + 'px';
-    datapad.style.height = h + 'px';
-  }
-
-  /* ── ORIENTATION + ROTATION ───────────────── */
-  let isFlipping = false;
-
-  function setOrientationFor() {
-    const wide = matchMedia('(min-width: 1100px)').matches;
-    const stageW = stage.clientWidth - (wide ? 296 : 0);
-    const stageH = stage.clientHeight;
-    if (stageW <= 0 || stageH <= 0) return 'vertical';
-    const fit = (ratio) => {
-      const wFromH = stageH * ratio;
-      const w = Math.min(stageW, wFromH);
-      const h = w / ratio;
-      return w * h;
-    };
-    return fit(8 / 5) > fit(5 / 8) * 1.05 ? 'horizontal' : 'vertical';
-  }
-
-  function flipTo(targetOrient) {
-    if (isFlipping) return;
-    if (datapad.dataset.orientation === targetOrient) return;
-    isFlipping = true;
-    const cw = targetOrient === 'horizontal';
-    const animClass = cw ? 'flipping-cw' : 'flipping-ccw';
-    datapad.classList.add(animClass);
-    setTimeout(() => {
-      datapad.classList.remove(animClass);
-      datapad.dataset.orientation = targetOrient;
-      datapad.style.removeProperty('transform');
-      sizeDatapad();
-      isFlipping = false;
-    }, 700);
-  }
-
-  function autoOrient() {
-    if (isFlipping) return;
-    const target = setOrientationFor();
-    if (datapad.dataset.orientation === target) sizeDatapad();
-    else flipTo(target);
-  }
-
-  /* ── THEME ────────────────────────────────── */
-  document.querySelectorAll('.theme-toggle .opt').forEach(opt => {
-    opt.addEventListener('click', () => {
-      const next = opt.dataset.themeSet;
-      root.dataset.theme = next;
-      localStorage.setItem('stillness-theme', next);
-      document.querySelectorAll('.theme-toggle .opt').forEach(o => {
-        o.classList.toggle('active', o.dataset.themeSet === next);
-      });
-    });
-  });
-  (function() {
-    const cur = root.dataset.theme || 'dark';
-    document.querySelectorAll('.theme-toggle .opt').forEach(o => {
-      o.classList.toggle('active', o.dataset.themeSet === cur);
-    });
-  })();
-
-  /* ── READING METADATA — word count + est. time ─ */
-  (function computeReadMeta() {
-    const text = prose.textContent || '';
-    const words = text.trim().split(/\s+/).filter(Boolean).length;
-    const minutes = Math.max(1, Math.ceil(words / 220));
-    const wDisplay = words >= 1000 ? (words / 1000).toFixed(1) + 'K' : String(words);
-    readMeta.textContent = `${wDisplay} W // ${minutes} MIN`;
-  })();
-
-  /* ── PROGRESS ─────────────────────────────── */
-  function updateProgress() {
-    const max = screenContent.scrollHeight - screenContent.clientHeight;
-    const pct = max > 0 ? Math.round((screenContent.scrollTop / max) * 100) : 0;
-    progressFill.style.width = pct + '%';
-    progressText.textContent = pct + '%';
-    sessionStorage.setItem('stillness-scroll-ch01', screenContent.scrollTop);
-  }
-  screenContent.addEventListener('scroll', updateProgress, { passive: true });
-
-  /* ── FONT SIZE ────────────────────────────── */
-  let fontStep = parseFloat(localStorage.getItem('stillness-fontstep') || '0');
-  function applyFont() {
-    const size = (0.98 + fontStep * 0.08).toFixed(3);
-    prose.style.setProperty('--read-size', size + 'rem');
-    localStorage.setItem('stillness-fontstep', fontStep);
-  }
-  applyFont();
-  btnFontUp.addEventListener('click',   () => { if (fontStep < 4)  { fontStep++; applyFont(); }});
-  btnFontDown.addEventListener('click', () => { if (fontStep > -2) { fontStep--; applyFont(); }});
-
-  /* ── DIRECTORY DRAWER ─────────────────────── */
-  dirToggle.addEventListener('click', e => {
-    e.stopPropagation();
-    directory.classList.toggle('open');
-  });
-  document.addEventListener('click', e => {
-    if (directory.classList.contains('open') &&
-        !directory.contains(e.target) &&
-        e.target !== dirToggle) {
-      directory.classList.remove('open');
-    }
-  });
-  document.querySelectorAll('.dir-item:not(.locked)').forEach(item => {
-    item.addEventListener('click', () => {
-      const href = item.dataset.href;
-      if (href && href !== window.location.pathname.split('/').pop()) {
-        window.location.href = href;
-      }
-    });
-  });
-
-  /* ── MOUSE PARALLAX ───────────────────────── */
-  if (matchMedia('(hover: hover)').matches) {
-    stage.addEventListener('mousemove', e => {
-      if (isFlipping) return;
-      const rect = datapad.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) / rect.width;
-      const dy = (e.clientY - cy) / rect.height;
-      const tiltY = Math.max(-1, Math.min(1, dx)) * 4;
-      const tiltX = Math.max(-1, Math.min(1, dy)) * -3;
-      datapad.style.setProperty('--tilt-y', tiltY + 'deg');
-      datapad.style.setProperty('--tilt-x', tiltX + 'deg');
-    });
-    stage.addEventListener('mouseleave', () => {
-      datapad.style.setProperty('--tilt-y', '0deg');
-      datapad.style.setProperty('--tilt-x', '0deg');
-    });
-  }
-
-  /* ── KEYBOARD ─────────────────────────────── */
-  document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowLeft' && !btnPrev.disabled)  btnPrev.click();
-    if (e.key === 'ArrowRight' && !btnNext.disabled) btnNext.click();
-    if (e.key.toLowerCase() === 't') {
-      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      const opt = document.querySelector('.theme-toggle .opt[data-theme-set="' + next + '"]');
-      if (opt) opt.click();
-    }
-  });
-
-  /* ── RESIZE ───────────────────────────────── */
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(autoOrient, 120);
-  });
-  window.addEventListener('orientationchange', () => setTimeout(autoOrient, 200));
-
-  /* ── BOOT ─────────────────────────────────── */
-  if (sessionStorage.getItem('stillness-booted')) {
-    boot.style.display = 'none';
-  } else {
-    sessionStorage.setItem('stillness-booted', '1');
-  }
-
-  requestAnimationFrame(() => {
-    const initialTarget = setOrientationFor();
-    datapad.dataset.orientation = initialTarget;
-    sizeDatapad();
-    requestAnimationFrame(() => {
-      sizeDatapad();
-      const savedScroll = sessionStorage.getItem('stillness-scroll-ch01');
-      if (savedScroll) screenContent.scrollTop = parseInt(savedScroll, 10);
-      updateProgress();
-    });
-  });
-})();
-</script>
-
+  <script src="datapad.js"></script>
 </body>
 </html>
