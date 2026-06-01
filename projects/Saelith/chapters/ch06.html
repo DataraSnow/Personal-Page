@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Chapter 6 // TITLE — Stillness</title>
+  <!-- ↑ change chapter number + title -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="datapad.css">
+
+  <script>
+  /* apply saved Jedi/Sith mode before paint (drives both room + screen) */
+  (function() {
+    var p = new URLSearchParams(location.search);
+    var preview = p.has('chassis') || p.has('ambiance') || p.has('focus');
+    var ls = function(k){ return preview ? null : localStorage.getItem(k); };
+    var amb = p.get('ambiance') || ls('dp-ambiance') || 'sith';
+    document.documentElement.setAttribute('data-ambiance', amb === 'jedi' ? 'jedi' : 'sith');
+  })();
+  </script>
+</head>
+<body>
+
+<!-- ═══════ TOP BAR ═══════ -->
+<header class="reader-bar">
+  <div class="bar-left">
+    <a href="../index.html" class="back-link">← Archive</a>
+    <button class="dir-toggle" id="dirToggle" aria-label="Open chapter directory">☰ Index</button>
+  </div>
+  <div class="bar-title">CH.01 // The Ice and the Promise</div>
+  <div class="bar-right">
+    <div class="seg ambiance-seg" role="group" aria-label="Mode">
+      <span class="seg-label">MODE</span>
+      <span class="opt" data-ambiance-set="jedi" title="Jedi — daylight screen, cool room">JEDI</span>
+      <span class="opt" data-ambiance-set="sith" title="Sith — dark holo screen, warm room">SITH</span>
+    </div>
+    <button class="focus-btn" id="focusBtn" aria-pressed="false" title="Distraction-free reading (F)">▣ <span class="fb-label">Focus</span></button>
+  </div>
+</header>
+
+<!-- ═══════ STAGE ═══════ -->
+<main class="reader-stage" id="stage">
+
+  <!-- ATMOSPHERE — out-of-band fragments + faint stars -->
+  <div class="atmosphere" aria-hidden="true">
+    <div class="atmo-stars"></div>
+
+    <div class="atmo-snippet pos-tr">
+<span class="label">Freq // 4471.32</span><span class="body">::SECTOR-9 ENCRYPT
+::▓▓▓▓ ▓▓▓ ▓▓▓▓▓▓
+::[DECRYPT FAILED]
+::RETRY 03 OF 12</span>
+    </div>
+
+    <div class="atmo-snippet pos-br pulsing">
+<span class="label">Intel_Frag // 0014.A</span><span class="body">"...did not arrive at
+the rendezvous point"
+"...believed compromised"
+::SOURCE [REDACTED]</span>
+    </div>
+
+    <div class="atmo-snippet pos-bl">
+<span class="label">Subchannel // 88.2</span><span class="body">::ECHO-PRIME ACTIVE
+::03 OBSERVERS NEARBY
+::HOLDING PATTERN</span>
+    </div>
+
+    <div class="atmo-snippet pos-tl">
+<span class="label">Sector_Log // OUTER RIM</span><span class="body">::ENTRIES 7 // FILED
+::CLEARANCE LVL 4
+::▓▓▓▓ ▓▓▓▓ ▓▓▓</span>
+    </div>
+  </div>
+
+  <aside class="directory" id="directory" aria-label="Chapter directory">
+    <div class="directory-header">DATA_LOG_INDEX</div>
+    <ol class="directory-list">
+      <li class="dir-item current" data-href="Datapad Reader.html">
+        <span class="num">CH.01</span>
+        <span class="name">The Ice and the Promise</span>
+      </li>
+      <li class="dir-item locked" aria-disabled="true">
+        <span class="num">CH.02</span>
+        <span class="name">A Daughter, Briefly</span>
+      </li>
+      <li class="dir-item locked" aria-disabled="true">
+        <span class="num">CH.03</span>
+        <span class="name">The Office of Quiet Math</span>
+      </li>
+      <li class="dir-item locked" aria-disabled="true">
+        <span class="num">CH.04</span>
+        <span class="name">// Encrypted</span>
+      </li>
+    </ol>
+    <div class="directory-foot">SEC.LVL — 4 // ACTIVE</div>
+  </aside>
+
+  <div class="datapad" id="datapad" data-chassis="sentinel">
+
+    <!-- RAIL · LEFT — chunky greeblies -->
+    <div class="rail rail-left" aria-hidden="true">
+      <span class="cyl"></span>
+      <span class="rib"></span>
+      <span class="cyl"></span>
+      <span class="port"></span>
+      <span class="bolt"></span>
+    </div>
+
+    <div class="core">
+
+      <span class="chassis-print print-tl" aria-hidden="true">DTPD/J-7</span>
+      <span class="chassis-print print-tr" aria-hidden="true">REV.3</span>
+      <span class="chassis-print print-bl" aria-hidden="true">PROP. ARC</span>
+      <span class="chassis-print print-br" aria-hidden="true">⚠ SEC.4</span>
+
+      <div class="bezel-top">
+        <span class="screw tl" aria-hidden="true"></span>
+        <span class="screw tr" aria-hidden="true"></span>
+
+        <div class="bezel-top-left">
+          <div class="led-strip" aria-hidden="true">
+            <span class="led on white blink"></span>
+            <span class="led on amber"></span>
+            <span class="led on accent"></span>
+          </div>
+          <span class="speaker-grille" aria-hidden="true"></span>
+        </div>
+
+        <div class="bezel-top-right">
+          <div class="device-id">
+            <span class="sensor-lens" aria-hidden="true"></span>
+            UNIT-J7-ARC
+          </div>
+          <div class="live-status">
+            <svg class="signal-bars" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true">
+              <rect x="0" y="6" width="2" height="2"></rect>
+              <rect x="3" y="4" width="2" height="4"></rect>
+              <rect x="6" y="2" width="2" height="6"></rect>
+              <rect x="9" y="0" width="2" height="8"></rect>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen">
+        <div class="screen-header">
+          <div class="scan-gauge" aria-hidden="true">
+            <svg viewBox="0 0 44 44">
+              <circle class="g-track" cx="22" cy="22" r="18"></circle>
+              <circle class="g-ticks" cx="22" cy="22" r="20.5"></circle>
+              <circle class="g-prog" id="gaugeProg" cx="22" cy="22" r="18"></circle>
+            </svg>
+            <span class="g-pct" id="gaugePct">0</span>
+          </div>
+          <div class="sh-text">
+            <div class="screen-title">
+              <span class="ch-num">01</span>The Ice and the Promise
+            </div>
+            <div class="screen-meta">
+              <span>ILUM // 26 BBY</span>
+              <span class="meta-read" id="readMeta">— W // — MIN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-content" id="screenContent">
+          <article class="prose" id="prose">
+
+            <!-- ═══════════════════════════════════════════════════
+                 CHAPTER CONTENT — replace everything below with your prose.
+                 Use <p> for paragraphs, <div class="scene-break">— ⟡ —</div>
+                 for scene breaks, <em> for italics, <blockquote> for pull-quotes.
+                 The drop-cap auto-applies to the first letter of the first <p>.
+                 ═══════════════════════════════════════════════════ -->
+
+            <p>Your first paragraph here.</p>
+
+            <p>Your second paragraph here.</p>
+
+            <div class="scene-break">— ⟡ —</div>
+
+            <p>After the scene break.</p>
+
+            <!-- Optional: comic/image placeholder
+            <figure class="comic placeholder">
+              <span class="ph-name">// IMAGE_BLOCK 01.A</span>
+              <span class="ph-tag">PENDING DECLASSIFICATION</span>
+            </figure>
+            -->
+
+            <!-- Optional: blockquote
+            <blockquote>A quote from a character or in-universe text.</blockquote>
+            -->
+
+            <div class="chapter-end">/// END_OF_LOG ///</div>
+
+            <!-- Optional: next chapter teaser (locked)
+            <a class="next-locked" aria-disabled="true">
+              <div class="nl-label">NEXT FILE // CH.XX</div>
+              <div class="nl-title">Chapter Title Here</div>
+              <div class="nl-cta">⚠ DECRYPTION REQUIRED // SEC.LVL 4</div>
+            </a>
+            -->
+
+          </article>
+        </div>
+      </div>
+
+      <div class="bezel-bottom">
+        <span class="screw bl" aria-hidden="true"></span>
+        <span class="screw br" aria-hidden="true"></span>
+        <span class="datacard-slot" aria-hidden="true"></span>
+
+        <div class="controls">
+          <button class="control prev" id="btnPrev" disabled="" title="Previous chapter (←)">← Prev</button>
+          <button class="control next" id="btnNext" disabled="" title="Next chapter (→)">Next →</button>
+        </div>
+        <div class="progress" aria-label="Reading progress">
+          <span class="progress-bar"><span class="progress-fill" id="progressFill"></span></span>
+          <span class="progress-text" id="progressText">0%</span>
+        </div>
+        <div class="controls">
+          <span class="vent-grille" aria-hidden="true"></span>
+          <button class="control" id="btnFontDown" title="Decrease text size">A−</button>
+          <button class="control" id="btnFontUp" title="Increase text size">A+</button>
+        </div>
+      </div>
+
+    </div><!-- /core -->
+
+    <!-- RAIL · RIGHT -->
+    <div class="rail rail-right" aria-hidden="true">
+      <span class="cyl short"></span>
+      <span class="bolt"></span>
+      <span class="cyl"></span>
+      <span class="rib"></span>
+      <span class="cyl short"></span>
+      <span class="spine">UNIT-J7-ARC // SEC.LVL 4 // ILUM 26 BBY</span>
+      <span class="spine-bar"><span class="spine-fill" id="spineFill"></span></span>
+    </div>
+
+  </div>
+
+  <aside class="cross-ref" id="crossRef" aria-label="Cross references and subject context">
+
+    <div class="cr-section">
+      <div class="cr-section-header">SUBJECT</div>
+      <div class="cr-subject-grid">
+        <span class="cr-key">Designation</span>  <span class="cr-val">Veyra, S.</span>
+        <span class="cr-key">Species</span>      <span class="cr-val">Echani / F</span>
+        <span class="cr-key">Age at log</span>   <span class="cr-val">13.4 STD</span>
+        <span class="cr-key">Order rank</span>   <span class="cr-val">Padawan</span>
+        <span class="cr-key">Clearance</span>    <span class="cr-val cr-accent">Sec.Lvl 4</span>
+      </div>
+    </div>
+
+    <div class="cr-section">
+      <div class="cr-section-header">Cross_Reference</div>
+      <div class="cr-link locked" aria-disabled="true">
+        <span class="cr-id">► Ilum_Exped // 26 BBY</span>
+        <span class="cr-name">Joint expedition log</span>
+        <span class="cr-tag">[Decrypt failed]</span>
+      </div>
+      <div class="cr-link locked" aria-disabled="true">
+        <span class="cr-id">► Calreth-M // File</span>
+        <span class="cr-name">Subject profile, Master Calreth</span>
+        <span class="cr-tag">[Redacted]</span>
+      </div>
+      <div class="cr-link locked" aria-disabled="true">
+        <span class="cr-id">► Echani-Ethno // 88 BBY</span>
+        <span class="cr-name">Cultural survey, Eshan</span>
+        <span class="cr-tag">Sec.Lvl 3 req.</span>
+      </div>
+      <div class="cr-link locked" aria-disabled="true">
+        <span class="cr-id">► Kyber_Freq // Block 4</span>
+        <span class="cr-name">Crystal resonance data</span>
+        <span class="cr-tag">[Encrypted]</span>
+      </div>
+    </div>
+
+    <div class="cr-section">
+      <div class="cr-section-header">Field_Note</div>
+      <p class="cr-note">
+        Subject did not designate her crystal during the standard meditation period. Returned to the gathering point eight minutes after the others. Did not explain.
+      </p>
+      <span class="cr-note-meta">// File: SV-OBS-0001 // Pre-padawan</span>
+    </div>
+
+    <div class="cr-footer">
+      <span class="cr-pulse"></span>
+      Live feed // Sec.Lvl 4
+    </div>
+
+  </aside>
+
+</main>
+
+<div class="boot-overlay" id="bootOverlay" aria-hidden="true">
+  <div class="boot-line">
+    <span>UNIT-J7-ARC // POWERING ON</span>
+    <span>DATA INTEGRITY: OK</span>
+    <span>OPENING LOG_ENTRY 01</span>
+  </div>
+</div>
+
+  <script src="datapad.js"></script>
+</body>
+</html>
